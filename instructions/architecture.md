@@ -51,6 +51,7 @@ supabase/migrations/                        # schema + RLS (fuente de verdad)
 Módulos: `treasury` (proveedores y capital), `sourcing` (clientes, packing lists, lotes), `arbitrage` (operaciones, cruce y liquidación), `compliance` (KYC y documentos), `identity` (usuarios, roles y permisos), `audit` (bitácora inmutable).
 
 Reglas entre módulos:
+
 - Un módulo **no importa el interior de otro**. Si `arbitrage` necesita saldo de `treasury`, lo pide por un puerto inbound de `treasury` (o por un puerto outbound propio que un adaptador resuelve).
 - Solo `domain/shared` y `application/shared` son importables por todos.
 - La transacción que abarca varios repositorios (p. ej. asignar fondos + asiento contable + audit) se coordina con el puerto `UnitOfWork`, nunca abriendo transacciones de Kysely en el caso de uso.
@@ -63,13 +64,13 @@ Reglas entre módulos:
 
 ## 4. SOLID aplicado (con ejemplos de este dominio)
 
-| Principio | Cómo se aplica aquí |
-|---|---|
-| **S** — Responsabilidad única | `RegisterArbitrageOperationUseCase` solo orquesta. El cálculo del margen vive en `MarginCalculator` (domain) y la persistencia en el repositorio. Un controller no tiene lógica: valida el input (Zod), llama al caso de uso y mapea la respuesta. |
-| **O** — Abierto/cerrado | Se agregan comportamientos registrando una nueva estrategia en un mapa (`FEE_STRATEGIES`, `ERROR_HTTP_MAP`), no agregando un `if/else` al código existente. |
-| **L** — Sustitución de Liskov | Cualquier implementación de `OperationRepositoryPort` (Kysely o in-memory) cumple el mismo contrato, y los specs del puerto corren contra ambas. |
-| **I** — Segregación de interfaces | Puertos chicos: `OperationReader` y `OperationWriter` en lugar de un repositorio-dios. Un caso de uso pide solo lo que usa. |
-| **D** — Inversión de dependencias | Los casos de uso reciben puertos por constructor; nunca hacen `new` de un adaptador. |
+| Principio                         | Cómo se aplica aquí                                                                                                                                                                                                                                |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **S** — Responsabilidad única     | `RegisterArbitrageOperationUseCase` solo orquesta. El cálculo del margen vive en `MarginCalculator` (domain) y la persistencia en el repositorio. Un controller no tiene lógica: valida el input (Zod), llama al caso de uso y mapea la respuesta. |
+| **O** — Abierto/cerrado           | Se agregan comportamientos registrando una nueva estrategia en un mapa (`FEE_STRATEGIES`, `ERROR_HTTP_MAP`), no agregando un `if/else` al código existente.                                                                                        |
+| **L** — Sustitución de Liskov     | Cualquier implementación de `OperationRepositoryPort` (Kysely o in-memory) cumple el mismo contrato, y los specs del puerto corren contra ambas.                                                                                                   |
+| **I** — Segregación de interfaces | Puertos chicos: `OperationReader` y `OperationWriter` en lugar de un repositorio-dios. Un caso de uso pide solo lo que usa.                                                                                                                        |
+| **D** — Inversión de dependencias | Los casos de uso reciben puertos por constructor; nunca hacen `new` de un adaptador.                                                                                                                                                               |
 
 ## 5. Reglas del dominio financiero
 

@@ -4,22 +4,22 @@
 
 ## Tamaño y forma
 
-| Regla | Límite | Lo hace cumplir |
-|---|---|---|
-| Líneas por función | ≤ 30 | ESLint `max-lines-per-function` |
-| Líneas por archivo | ≤ 250 | ESLint `max-lines` |
-| Parámetros por función | ≤ 3 (si son más, un objeto tipado) | ESLint `max-params` |
-| Anidamiento | ≤ 2 niveles | ESLint `max-depth` |
-| Complejidad ciclomática | ≤ 8 | ESLint `complexity` |
-| `else` después de `return`/`throw` | prohibido | ESLint `no-else-return` |
-| `any` | prohibido (`unknown` + narrowing) | `@typescript-eslint/no-explicit-any` |
-| Non-null assertion `!` | prohibido | `@typescript-eslint/no-non-null-assertion` |
-| `console.*` | prohibido (usar el logger) | ESLint `no-console` |
+| Regla                              | Límite                             | Lo hace cumplir                            |
+| ---------------------------------- | ---------------------------------- | ------------------------------------------ |
+| Líneas por función                 | ≤ 30                               | ESLint `max-lines-per-function`            |
+| Líneas por archivo                 | ≤ 250                              | ESLint `max-lines`                         |
+| Parámetros por función             | ≤ 3 (si son más, un objeto tipado) | ESLint `max-params`                        |
+| Anidamiento                        | ≤ 2 niveles                        | ESLint `max-depth`                         |
+| Complejidad ciclomática            | ≤ 8                                | ESLint `complexity`                        |
+| `else` después de `return`/`throw` | prohibido                          | ESLint `no-else-return`                    |
+| `any`                              | prohibido (`unknown` + narrowing)  | `@typescript-eslint/no-explicit-any`       |
+| Non-null assertion `!`             | prohibido                          | `@typescript-eslint/no-non-null-assertion` |
+| `console.*`                        | prohibido (usar el logger)         | ESLint `no-console`                        |
 
 ## Flujo de control: guard clauses + mapas, no cascadas de `if`
 
 1. **Guard clauses al inicio**: se valida y se sale temprano. El camino feliz queda al final, sin indentar.
-2. **Si el `if`/`switch` decide *qué hacer* según un tipo, estado o código → se usa un mapa de estrategias** (`Record<Clave, Estrategia>`). Agregar un caso es agregar una entrada al mapa, no tocar la lógica (principio abierto/cerrado).
+2. **Si el `if`/`switch` decide _qué hacer_ según un tipo, estado o código → se usa un mapa de estrategias** (`Record<Clave, Estrategia>`). Agregar un caso es agregar una entrada al mapa, no tocar la lógica (principio abierto/cerrado).
 3. Con `Record<UnionType, ...>` TypeScript obliga a cubrir todas las claves: si alguien agrega un estado nuevo y olvida su estrategia, **no compila**.
 
 ```ts

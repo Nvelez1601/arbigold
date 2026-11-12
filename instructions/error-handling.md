@@ -7,7 +7,7 @@
 ```ts
 // domain/shared/app-error.ts
 export abstract class AppError extends Error {
-  abstract readonly code: ErrorCode;          // p. ej. 'OPERATION_INVALID_TRANSITION'
+  abstract readonly code: ErrorCode; // p. ej. 'OPERATION_INVALID_TRANSITION'
   readonly details?: Readonly<Record<string, unknown>>;
 }
 ```
@@ -53,12 +53,12 @@ Los estados de una operación (y de cualquier flujo) se declaran como mapa de tr
 
 ```ts
 const OPERATION_TRANSITIONS: Record<OperationStatus, readonly OperationStatus[]> = {
-  DRAFT:            ['FUNDED', 'CANCELLED'],
-  FUNDED:           ['ALLOCATED', 'CANCELLED'],
-  ALLOCATED:        ['GOLD_RECEIVED'],
-  GOLD_RECEIVED:    ['SETTLED'],
-  SETTLED:          [],
-  CANCELLED:        [],
+  DRAFT: ['FUNDED', 'CANCELLED'],
+  FUNDED: ['ALLOCATED', 'CANCELLED'],
+  ALLOCATED: ['GOLD_RECEIVED'],
+  GOLD_RECEIVED: ['SETTLED'],
+  SETTLED: [],
+  CANCELLED: [],
 } as const;
 
 assertTransition(from, to); // lanza OperationInvalidTransitionError si no está en el mapa
@@ -70,11 +70,11 @@ Los permisos no se escriben como `if (user.role === ...)` dentro de los handlers
 
 ```ts
 const PERMISSIONS: Record<Role, readonly Permission[]> = {
-  ADMIN:      ['*'],
-  TREASURY:   ['supplier:read', 'supplier:write', 'ledger:read'],
+  ADMIN: ['*'],
+  TREASURY: ['supplier:read', 'supplier:write', 'ledger:read'],
   OPERATIONS: ['operation:read', 'operation:write', 'packing-list:write'],
   COMPLIANCE: ['kyc:read', 'kyc:approve', 'audit:read'],
-  VIEWER:     ['operation:read'],
+  VIEWER: ['operation:read'],
 };
 router.post('/operations', requirePermission('operation:write'), controller.create);
 ```

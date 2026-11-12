@@ -37,13 +37,13 @@
 
 ## 5. Gestión de vulnerabilidades (SOC 2 CC7.1 · ISO A.8.8)
 
-| Control en CI | Herramienta | Bloquea el merge |
-|---|---|---|
-| Dependencias vulnerables | `npm audit --audit-level=high` + Dependabot | Sí (high/critical) |
-| Análisis estático de seguridad | CodeQL o Semgrep | Sí |
-| Secretos en el código | gitleaks (también en pre-commit) | Sí |
-| Lockfile sincronizado | `npm ci` | Sí |
-| Licencias de dependencias | license-checker (allowlist) | Advertencia |
+| Control en CI                  | Herramienta                                 | Bloquea el merge   |
+| ------------------------------ | ------------------------------------------- | ------------------ |
+| Dependencias vulnerables       | `npm audit --audit-level=high` + Dependabot | Sí (high/critical) |
+| Análisis estático de seguridad | CodeQL o Semgrep                            | Sí                 |
+| Secretos en el código          | gitleaks (también en pre-commit)            | Sí                 |
+| Lockfile sincronizado          | `npm ci`                                    | Sí                 |
+| Licencias de dependencias      | license-checker (allowlist)                 | Advertencia        |
 
 - Las dependencias nuevas requieren justificación en el PR: mantenimiento activo, licencia y superficie de ataque.
 

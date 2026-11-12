@@ -2,7 +2,7 @@
 
 ERP para la intermediación/arbitraje de oro: fondos de proveedores → asignación a clientes → recepción de oro → liquidación, con compliance KYC.
 
-**Si eres un agente: lee `instructions/README.md` y las 5 normas antes de escribir código.** No son sugerencias: los gates de CI y el review las hacen cumplir.
+**Si eres un agente: lee `instructions/README.md` y las 6 normas antes de escribir código.** No son sugerencias: los gates de CI y el review las hacen cumplir.
 
 ## Stack
 
@@ -31,6 +31,10 @@ docs/                Arquitectura y dominio (glosario en docs/domain/glossary.md
 6. RLS en todas las tablas; el frontend no accede a la DB; la `service_role` no se usa en runtime.
 7. Nunca se loggea PII, tokens ni secretos. Ningún secreto se commitea.
 8. Los asientos contables no se editan ni se borran: se reversan.
+
+## Hooks y validación local
+
+Cada commit pasa por Husky: **ESLint** (clean code y fronteras hexagonales), **Prettier**, el **gate de specs** y **commitlint**. Prohibido usar `--no-verify`. Antes de un PR, corre `npm run check` (y `npm run test:cov`). Detalle en `instructions/tooling.md`.
 
 ## Flujo de ramas
 

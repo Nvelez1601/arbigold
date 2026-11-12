@@ -8,6 +8,18 @@ ERP para la operación de intermediación/arbitraje de oro: fondos de proveedore
 
 Node.js 24 + TypeScript · Express 5 · Supabase (PostgreSQL, Auth, Storage) + Kysely · Zod · Vue 3 + Vite + Pinia + PrimeVue + Tailwind · Vitest / Playwright. Justificación: [ADR-001](memory/decision_logs/ADR-001-stack-tecnologico.md).
 
+## Arranque local
+
+```bash
+nvm use                      # Node 24
+npm install                  # workspaces + hooks de git (Husky)
+cp apps/backend/.env.example apps/backend/.env
+npm run db:start             # Supabase local (Docker)
+npm run dev:backend          # API :3000
+npm run dev:frontend         # SPA :5173
+npm run check                # lo mismo que valida el CI
+```
+
 ## Normas
 
 Leer [`instructions/README.md`](instructions/README.md) antes de contribuir. Punto de entrada para agentes: [`AGENTS.md`](AGENTS.md).

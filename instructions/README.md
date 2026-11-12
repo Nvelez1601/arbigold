@@ -2,13 +2,13 @@
 
 Lectura obligatoria antes de tocar código (humanos y agentes):
 
-| # | Norma | Archivo |
-|---|---|---|
-| 1 | Seguridad y cumplimiento (SOC 2 / ISO 27001) | [security-compliance.md](security-compliance.md) |
-| 2 | Arquitectura: Clean/Hexagonal + SOLID | [architecture.md](architecture.md) |
-| 3 | Clean Code | [clean-code.md](clean-code.md) |
-| 4 | Manejo de errores por mapas de estrategia | [error-handling.md](error-handling.md) |
-| 5 | Principio de specs y gates de cobertura | [testing.md](testing.md) |
+| #   | Norma                                        | Archivo                                          |
+| --- | -------------------------------------------- | ------------------------------------------------ |
+| 1   | Seguridad y cumplimiento (SOC 2 / ISO 27001) | [security-compliance.md](security-compliance.md) |
+| 2   | Arquitectura: Clean/Hexagonal + SOLID        | [architecture.md](architecture.md)               |
+| 3   | Clean Code                                   | [clean-code.md](clean-code.md)                   |
+| 4   | Manejo de errores por mapas de estrategia    | [error-handling.md](error-handling.md)           |
+| 5   | Principio de specs y gates de cobertura      | [testing.md](testing.md)                         |
 
 Stack y su justificación: [`memory/decision_logs/ADR-001-stack-tecnologico.md`](../memory/decision_logs/ADR-001-stack-tecnologico.md).
 
