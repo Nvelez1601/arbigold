@@ -1,0 +1,2 @@
+# Formato de commit: tipo(scope): descripción [| ARB-123]  — ver commitlint.config.mjs
+npx --no -- commitlint --edit "$1"

@@ -1,0 +1,5 @@
+# Pre-commit (instructions/clean-code.md + instructions/testing.md):
+# 1) ESLint (clean code + fronteras hexagonales) y Prettier sobre los archivos en stage.
+# 2) Principio de specs: todo archivo fuente en stage debe tener su spec.
+npx lint-staged
+node scripts/spec-presence-gate.mjs --staged
