@@ -123,3 +123,7 @@ docker-compose.override.yml
 .cursor/
 .worktrees/
 memory/notes/*.local.md
+
+# ---------- Supabase CLI (estado local) ----------
+supabase/.temp/
+supabase/.branches/

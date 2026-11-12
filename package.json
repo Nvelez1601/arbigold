@@ -1,0 +1,53 @@
+{
+  "name": "arbigold",
+  "private": true,
+  "description": "ERP de intermediación y arbitraje de oro",
+  "type": "module",
+  "engines": {
+    "node": ">=24 <25",
+    "npm": ">=10"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "prepare": "husky",
+    "dev:backend": "npm run dev -w @arbigold/backend",
+    "dev:frontend": "npm run dev -w @arbigold/frontend",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint . --max-warnings=0",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run && npm run test --workspaces --if-present",
+    "test:int": "npm run test:int --workspaces --if-present",
+    "test:cov": "npm run test:cov --workspaces --if-present",
+    "spec:check": "node scripts/spec-presence-gate.mjs --all",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "check": "npm run format:check && npm run lint && npm run typecheck && npm run spec:check && npm test"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.5.3",
+    "@commitlint/config-conventional": "^20.5.3",
+    "@eslint/js": "^9.39.5",
+    "@vitest/coverage-v8": "^4.1.12",
+    "@vitest/eslint-plugin": "^1.6.27",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-boundaries": "^7.4.2",
+    "eslint-plugin-vue": "^10.12.1",
+    "globals": "^17.14.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.10.1",
+    "supabase": "^3.1.0",
+    "typescript": "~6.0",
+    "typescript-eslint": "^8.72.2",
+    "vitest": "^4.1.12"
+  }
+}
