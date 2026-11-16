@@ -4,8 +4,8 @@
   "description": "ERP de intermediación y arbitraje de oro",
   "type": "module",
   "engines": {
-    "node": ">=24 <25",
-    "npm": ">=10"
+    "node": ">=26 <27",
+    "npm": ">=11"
   },
   "workspaces": [
     "packages/*",
@@ -63,5 +63,9 @@
     "js-beautify": {
       "glob": "^14.0.6"
     }
+  },
+  "allowScripts": {
+    "esbuild": false,
+    "vue-demi": false
   }
 }
