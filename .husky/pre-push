@@ -1,3 +1,4 @@
+. "$(dirname "$0")/node-env.sh"
 # Pre-push: el "CI local" de un repo de una sola rama (main) sin PRs.
 # Nada llega a GitHub sin pasar: formato, lint, typecheck, specs, tests,
 # piso de cobertura por archivo (Regla 1) y líneas nuevas ejecutadas (Regla 2).
