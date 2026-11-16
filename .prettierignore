@@ -10,3 +10,9 @@ package-lock.json
 supabase/.temp
 supabase/.branches
 *.sql
+
+# Skills de agentes: vendorizadas (no se reformatean: rompería skills-lock.json)
+.agents
+.claude
+.opencode
+skills-lock.json

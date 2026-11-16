@@ -13,6 +13,8 @@ const AREAS = [
   'docs',
   'structure',
   'security',
+  'skills',
+  'reviews',
 ];
 
 export default {

@@ -38,6 +38,7 @@ backups/
 *.csv
 !**/fixtures/**/*.csv
 !**/seeds/**/*.csv
+!.agents/skills/**/*.csv
 
 # ---------- Node / TypeScript ----------
 node_modules/

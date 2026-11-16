@@ -169,6 +169,10 @@ export default tseslint.config(
       '**/playwright-report/**',
       '**/test-results/**',
       'supabase/**',
+      // Skills y agentes: contenido vendorizado (skills-lock.json) o markdown/bash propio.
+      '.agents/**',
+      '.claude/**',
+      '.opencode/**',
     ],
   },
 
