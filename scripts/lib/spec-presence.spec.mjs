@@ -59,6 +59,10 @@ describe('expectedSpecs', () => {
     ]);
   });
 
+  it('no pide spec para un archivo que no es código ejecutable', () => {
+    expect(expectedSpecs('docs/domain/glossary.md')).toEqual([]);
+  });
+
   it('pide .spec.mjs para un script', () => {
     expect(expectedSpecs('scripts/lib/x.mjs')).toEqual(['scripts/lib/x.spec.mjs']);
   });
