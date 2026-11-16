@@ -17,7 +17,13 @@ const REPORTS = [
   'packages/shared-types/coverage/coverage-final.json',
 ];
 
-const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim();
+// Buffer amplio: un diff grande (p. ej. skills vendorizadas) no debe tumbar el gate.
+const MAX_BUFFER = 256 * 1024 * 1024;
+// Solo las raíces de código sujetas al gate (las mismas de spec-gate.config.mjs).
+const CODE_PATHS = ['apps', 'packages', 'scripts'];
+
+const git = (...args) =>
+  execFileSync('git', args, { encoding: 'utf8', maxBuffer: MAX_BUFFER }).trim();
 const tryGit = (...args) => {
   try {
     return git(...args);
@@ -33,7 +39,16 @@ const resolveBase = (explicit) => {
 
 const root = git('rev-parse', '--show-toplevel');
 const base = resolveBase(process.argv[2]);
-const diff = git('diff', '--unified=0', '--no-color', '--diff-filter=AMR', base, 'HEAD');
+const diff = git(
+  'diff',
+  '--unified=0',
+  '--no-color',
+  '--diff-filter=AMR',
+  base,
+  'HEAD',
+  '--',
+  ...CODE_PATHS,
+);
 const reports = REPORTS.filter((path) => existsSync(`${root}/${path}`)).map((path) =>
   relativizeReport(JSON.parse(readFileSync(`${root}/${path}`, 'utf8')), root),
 );

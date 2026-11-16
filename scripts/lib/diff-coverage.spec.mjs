@@ -70,6 +70,14 @@ describe('uncoveredAddedItems', () => {
     expect(items).toEqual([{ kind: 'branch', line: 12, arm: 1 }]);
   });
 
+  it('ubica por su loc una función sin declaración (p. ej. una flecha anónima)', () => {
+    const cov = coverage({ f: { 1: 0 } });
+    cov.fnMap[1] = { name: '(anonymous_1)', loc: { start: { line: 4 } } };
+    expect(uncoveredAddedItems(cov, new Set([4]))).toEqual([
+      { kind: 'function', line: 4, name: '(anonymous_1)' },
+    ]);
+  });
+
   it('ignora lo no ejecutado que NO es parte del diff (código viejo)', () => {
     expect(uncoveredAddedItems(coverage({ s: { 0: 0 }, f: { 0: 0 } }), new Set([4]))).toEqual([]);
   });
