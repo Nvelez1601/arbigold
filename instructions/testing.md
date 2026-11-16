@@ -45,9 +45,9 @@ Líneas, statements, funciones **y** branches, medidas **por archivo** (no el pr
 
 Se mide el **archivo completo**, no tu diff. Si tocas 3 líneas de un archivo que estaba al 60%, el archivo entero tiene que subir al piso.
 
-### Regla 2 — Lo que agregaste en este PR tiene que ejecutarse
+### Regla 2 — Lo que agregaste tiene que ejecutarse
 
-El piso es del archivo; este check es del **diff**. Lo viejo no puede esconder lo nuevo: si `operation.repository.ts` está al 85% y agregas `findBySupplierAndStatus` sin un test que lo llame, el archivo puede seguir en 81% y **el job igual queda rojo**. Cada línea, función y branch agregado o modificado en el PR debe ejecutarse al menos una vez. Una función nueva vacía no mueve el % de líneas, pero igual tiene que ejecutarse.
+El piso es del archivo; este check es del **diff**. Lo viejo no puede esconder lo nuevo: si `operation.repository.ts` está al 85% y agregas `findBySupplierAndStatus` sin un test que lo llame, el archivo puede seguir en 81% y **el pre-push igual queda rojo**. Cada línea, función y branch agregado o modificado desde `origin/main` (lo que vas a pushear) debe ejecutarse al menos una vez. Una función nueva vacía no mueve el % de líneas, pero igual tiene que ejecutarse.
 
 ### Regla 3 — Los specs de integración son de verdad
 
@@ -68,21 +68,22 @@ No se baja el piso, no se agrega el archivo a la lista de exentos y no se marca 
 ## 5. Comandos (cópialos, no los reinventes)
 
 ```bash
-npm run spec:scaffold -- apps/backend/src/infrastructure/persistence/arbitrage/operation.repository.ts
 npm test                                    # unit de todos los workspaces
 npm run test:int                            # integración (requiere supabase start)
-npm run test:cov:changed -- staging         # gate completo vs la rama base del PR (beta | staging | main)
+npm run test:cov                            # Regla 1: piso por archivo (genera los coverage-final.json)
+npm run coverage:diff                       # Regla 2: lo agregado desde origin/main se ejecuta
+npm run verify                              # todo lo anterior + check: es lo que corre el pre-push
 ```
 
-> Estado: `spec-presence-gate` (Regla 0) y los pisos por archivo de Vitest (Regla 1, `npm run test:cov`) ya están activos. Todavía faltan `spec:scaffold` y `test:cov:changed` (Regla 2): estos comandos son el contrato que deben cumplir. Ver `tooling.md`, sección _Pendiente_.
+> Estado: las Reglas 0, 1 y 2 están activas. Regla 0: pre-commit (`spec-presence-gate`). Reglas 1 y 2: pre-push (`npm run verify`) y CI. No hay PRs: el gate de diff compara contra lo que todavía no está en `origin/main`.
 
 ## 6. Flujo de un feature
 
 1. Escribe o actualiza el **spec primero** (o en el mismo commit): define el contrato.
-2. Si el spec no existe, genera el esqueleto con `spec:scaffold`.
+2. Si el spec no existe, créalo al lado del archivo (el gate de specs te dice el nombre exacto).
 3. Implementa hasta que el spec pase.
-4. Antes de pushear corre `npm run test:cov:changed -- <base>`.
-5. En el PR, el CI corre los gates: spec-presence, unit + cobertura por archivo, integración + cobertura, patch coverage, lint y seguridad.
+4. Commitea: el pre-commit corre ESLint, Prettier y el gate de specs sobre lo que está en stage.
+5. Pushea: el pre-push corre `npm run verify` (formato, lint, typecheck, specs, tests, Regla 1 y Regla 2). El CI de GitHub repite lo mismo después del push y deja la evidencia.
 
 ## 7. Qué pasarle a una IA para que escriba un spec
 
@@ -103,10 +104,10 @@ Reglas:
 - Tipo de spec según la tabla de la sección 2 (repository → *.int.spec.ts con withDatabase, sin mockear la DB).
 - Cubre el método que agregué o cambié: <nombre>.
 - El archivo ≥ 80% (≥ 95% en domain) en líneas, statements, functions y branches.
-- Las líneas NUEVAS del PR tienen que ejecutarse; no basta con que el archivo pase el piso.
+- Las líneas NUEVAS tienen que ejecutarse; no basta con que el archivo pase el piso.
 - Nombres de test en lenguaje de negocio, en español.
 - No "mejores" el código bajo prueba: el spec caracteriza el contrato.
-- Verificar con: npm run test:cov:changed -- <beta|staging|main>
+- Verificar con: npm run verify
 
 Cambio concreto:
 - Método: <nombre>

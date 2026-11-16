@@ -17,7 +17,7 @@ cp apps/backend/.env.example apps/backend/.env
 npm run db:start             # Supabase local (Docker)
 npm run dev:backend          # API :3000
 npm run dev:frontend         # SPA :5173
-npm run check                # lo mismo que valida el CI
+npm run verify               # lo mismo que corre el pre-push y el CI
 ```
 
 ## Normas
@@ -40,7 +40,8 @@ apps/
   frontend/e2e/                                # Playwright
 packages/shared-types/                         # contratos Zod backend ↔ frontend
 supabase/migrations/                           # schema + RLS
-instructions/  memory/  skills/  docs/  scripts/
+instructions/  memory/  docs/  scripts/
+.agents/skills/                                # skills de agentes (symlinks en .claude/ y .opencode/)
 ```
 
 Módulos: `treasury` · `sourcing` · `arbitrage` · `compliance` · `identity` · `audit`.

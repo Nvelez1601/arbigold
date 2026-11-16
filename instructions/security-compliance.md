@@ -27,10 +27,14 @@
 
 ## 4. Desarrollo seguro y gestión de cambios (SOC 2 CC8.1 · ISO A.8.25–A.8.29, A.8.32)
 
-- Ningún push directo a `beta`, `staging` ni `main`: todo entra por PR con review y CI verde. Branch protection activada.
+- **Modelo de una sola rama (`main`), un solo desarrollador, sin PRs** (ver `ADR-002`). Como no hay segunda persona que apruebe, la segregación de funciones se reemplaza por **controles compensatorios**, todos con evidencia:
+  1. **Hooks obligatorios**: el pre-commit (lint, formato, specs, commitlint) y el pre-push (`npm run verify`: tests, cobertura por archivo y de diff). Prohibido `--no-verify`.
+  2. **CI en cada push a `main`** (`.github/workflows/ci.yml`): repite los gates y suma `npm audit` y gitleaks. Un CI rojo se corrige antes que cualquier feature nueva.
+  3. **Review asistida por agentes** (`arbigold-orquestador-reviews`) antes de pushear cambios en áreas críticas (dinero, KYC, auth, auditoría, RLS), con el informe versionado en `memory/reviews/`.
+  4. **Historial lineal e inmutable**: sin force-push a `main` (protección de rama en GitHub: bloquear force-push y borrado).
 - Base de referencia: **OWASP ASVS nivel 2** y OWASP Top 10.
 - **Validación con Zod en el borde** de cada entrada (body, params, query, headers relevantes y webhooks). Los objetos se parsean, no se castean.
-- Solo consultas parametrizadas (Kysely). Prohibido el SQL armado por concatenación; `sql.raw` requiere justificación en el PR.
+- Solo consultas parametrizadas (Kysely). Prohibido el SQL armado por concatenación; `sql.raw` requiere justificación en el mensaje del commit.
 - Headers con helmet, CORS con allowlist explícita (nunca `*`) y rate limit global más uno estricto en auth.
 - Límite de tamaño de body y validación de los archivos subidos por tipo MIME real (magic bytes), extensión y tamaño.
 - Las respuestas de error nunca exponen stack traces, SQL ni detalles internos.
@@ -45,7 +49,7 @@
 | Lockfile sincronizado          | `npm ci`                                    | Sí                 |
 | Licencias de dependencias      | license-checker (allowlist)                 | Advertencia        |
 
-- Las dependencias nuevas requieren justificación en el PR: mantenimiento activo, licencia y superficie de ataque.
+- Las dependencias nuevas requieren justificación en el commit (`build(deps): ...`): mantenimiento activo, licencia y superficie de ataque.
 
 ## 6. Datos, retención y continuidad (ISO A.8.10, A.8.13 · SOC 2 A1.2)
 
@@ -55,4 +59,4 @@
 
 ## 7. Evidencia
 
-Cada control debe poder demostrarse: el resultado del CI, los PR revisados, los reportes de `memory/qa/`, `audit_log` y la configuración versionada. **Un control sin evidencia no existe para un auditor.**
+Cada control debe poder demostrarse: el resultado del CI en cada push, los informes de review de `memory/reviews/`, los reportes de `memory/qa/`, `audit_log` y la configuración versionada. **Un control sin evidencia no existe para un auditor.**
