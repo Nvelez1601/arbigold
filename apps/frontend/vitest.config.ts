@@ -10,6 +10,8 @@ export default mergeConfig(
       environment: 'jsdom',
       include: ['src/**/*.spec.ts'],
       passWithNoTests: true,
+      // Procesa CSS para que `import x from './styles.css?raw'` traiga el texto (palette.spec.ts).
+      css: { include: [/styles\.css/] },
       coverage: {
         provider: 'v8',
         reporter: ['text', 'json', 'json-summary', 'html'],

@@ -1,1 +1,86 @@
 @import 'tailwindcss';
+
+/*
+ * Tokens de color de ArbiGold para Tailwind (bg-primary-600, text-heading, border-border…).
+ * Espejo de src/app/theme/palette.ts: palette.spec.ts falla si divergen.
+ * Guía de uso y contrastes: docs/design/paleta.md
+ */
+@theme {
+  /* Marca */
+  --color-brand-space-indigo: #21295c;
+  --color-brand-regal-navy: #1b3b6f;
+  --color-brand-baltic-blue: #065a82;
+  --color-brand-cerulean: #1c7293;
+  --color-brand-powder-blue: #9eb3c2;
+  --color-brand-yale-blue: #173b5e;
+  --color-brand-steel-blue: #6f9db8;
+  --color-brand-alice-blue: #d7e4e8;
+  --color-brand-dusty-lavender: #806d91;
+  --color-brand-charcoal-blue: #3d414a;
+
+  /* Primaria (componentes) */
+  --color-primary-50: #f0f5f8;
+  --color-primary-100: #d7e4e8;
+  --color-primary-200: #9eb3c2;
+  --color-primary-300: #6f9db8;
+  --color-primary-400: #4688a6;
+  --color-primary-500: #1c7293;
+  --color-primary-600: #065a82;
+  --color-primary-700: #1b3b6f;
+  --color-primary-800: #173b5e;
+  --color-primary-900: #21295c;
+  --color-primary-950: #151b3c;
+
+  /* Superficies y texto */
+  --color-surface-0: #ffffff;
+  --color-surface-50: #eff4f6;
+  --color-surface-100: #e5edf0;
+  --color-surface-200: #d7e4e8;
+  --color-surface-300: #b0bbc0;
+  --color-surface-400: #878f96;
+  --color-surface-500: #686f76;
+  --color-surface-600: #535860;
+  --color-surface-700: #3d414a;
+  --color-surface-800: #2f3553;
+  --color-surface-900: #282a30;
+  --color-surface-950: #181a1e;
+
+  /* Estados */
+  --color-success: #1f7a57;
+  --color-warning: #9a5b00;
+  --color-danger: #b42332;
+  --color-info: #065a82;
+
+  /* Roles */
+  --color-background: #eff4f6;
+  --color-heading: #21295c;
+  --color-text: #3d414a;
+  --color-muted: #686f76;
+  --color-accent: #806d91;
+  --color-border: #9eb3c2;
+  --color-border-strong: #878f96;
+}
+
+/* Detalle de marca: degradado para encabezados y elementos destacados. */
+@utility bg-brand-gradient {
+  background-image: linear-gradient(135deg, #21295c, #1b3b6f, #065a82, #1c7293);
+}
+
+@layer base {
+  :root {
+    /* La app es clara por ahora: light-dark() de PrimeVue siempre toma la variante clara. */
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-feature-settings: 'tnum'; /* cifras tabulares: los gramos se alinean en las tablas */
+  }
+
+  h1,
+  h2,
+  h3 {
+    color: var(--color-heading);
+  }
+}
