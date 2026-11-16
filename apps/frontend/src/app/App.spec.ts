@@ -12,4 +12,8 @@ describe('App', () => {
     const wrapper = mount(App, { props: { appName: 'ArbiGold Staging' } });
     expect(wrapper.get('h1').text()).toBe('ArbiGold Staging');
   });
+
+  it('usa el degradado de marca en el encabezado', () => {
+    expect(mount(App).get('header').classes()).toContain('bg-brand-gradient');
+  });
 });
