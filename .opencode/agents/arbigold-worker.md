@@ -1,0 +1,1 @@
+../../.agents/agents/arbigold-worker.md
