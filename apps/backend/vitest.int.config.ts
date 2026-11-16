@@ -1,4 +1,4 @@
-// Integración: repositories contra Postgres real (Supabase local) y HTTP con Supertest.
+// Integración: repositories contra Postgres real (proyecto Supabase de test, ADR-005) y HTTP con Supertest.
 // Prohibido mockear la DB aquí (instructions/testing.md, Regla 3).
 import { defineConfig } from 'vitest/config';
 import { COVERAGE_EXCLUDE, DEFAULT_FLOOR } from '../../vitest.shared.ts';

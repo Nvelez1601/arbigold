@@ -24,6 +24,11 @@ describe('createApp', () => {
     expect(denied.headers['access-control-allow-origin']).toBeUndefined();
   });
 
+  it('por defecto no confía en proxies; en producción confía en los saltos configurados', () => {
+    expect(app.get('trust proxy')).toBe(0);
+    expect(createApp({ corsOrigins: [], trustProxy: 1 }).get('trust proxy')).toBe(1);
+  });
+
   it('rechaza cuerpos que superan el límite de tamaño', async () => {
     const response = await request(app)
       .post('/health')
