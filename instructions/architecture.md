@@ -48,7 +48,7 @@ apps/backend/test/support/                  # withDatabase(), builders, fakes in
 supabase/migrations/                        # schema + RLS (fuente de verdad)
 ```
 
-Módulos: `treasury` (proveedores y capital), `sourcing` (clientes, packing lists, lotes), `arbitrage` (operaciones, cruce y liquidación), `compliance` (KYC y documentos), `identity` (usuarios, roles y permisos), `audit` (bitácora inmutable).
+Módulos: `treasury` (proveedores y sus fondos), `sourcing` (clientes y packing lists), `arbitrage` (operaciones: cierres de precio y margen), `exports` (exportaciones, resultado de refinería y conciliación), `compliance` (KYC y documentos), `identity` (usuarios, roles y permisos), `audit` (bitácora inmutable). Mapa del negocio en `docs/domain/modelo-operativo.md`.
 
 Reglas entre módulos:
 

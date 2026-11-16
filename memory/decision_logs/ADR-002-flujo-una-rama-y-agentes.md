@@ -62,4 +62,4 @@ Office, daily standup).
   automatización y en la review de agentes. Para una auditoría formal se documenta como
   **control compensatorio**. Si entra un segundo desarrollador, se reabre este ADR
   (volver a PRs con review obligatoria).
-- Desde el primer repository con base de datos, el pre-push y el CI necesitan Supabase local.
+- Desde el primer repository con base de datos, el pre-push y el CI necesitan el proyecto Supabase de test (ADR-005), no Supabase local.

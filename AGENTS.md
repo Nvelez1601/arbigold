@@ -20,7 +20,7 @@ instructions/           Normas obligatorias
 memory/                 Estado vivo: plans/, decision_logs/ (ADRs), reviews/, qa/, research_briefs/, notes/
 .agents/skills/         Skills de agentes (fuente única); .agents/agents/: arbigold-worker y arbigold-reviewer
 .claude/ .opencode/     Symlinks a .agents/ para Claude Code y OpenCode
-docs/                   Arquitectura y dominio (glosario en docs/domain/glossary.md)
+docs/                   setup/arranque.md, domain/modelo-operativo.md (el negocio), domain/glossary.md, design/paleta.md
 ```
 
 ## Reglas que no se rompen nunca

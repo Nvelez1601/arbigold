@@ -13,12 +13,19 @@ Node.js 26 LTS + TypeScript · Express 5 · Supabase (PostgreSQL, Auth, Storage)
 ```bash
 nvm install && nvm use       # Node 26 (.nvmrc)
 npm install                  # workspaces + hooks de git (Husky)
-cp apps/backend/.env.example apps/backend/.env
-npm run db:start             # Supabase local (Docker)
+cp apps/backend/.env.example apps/backend/.env            # + DATABASE_URL del panel de Supabase
+cp apps/frontend/.env.example apps/frontend/.env.local
+npm run db:link -- --project-ref <ref> && npm run db:push   # Supabase en la nube
 npm run dev:backend          # API :3000
 npm run dev:frontend         # SPA :5173
 npm run verify               # lo mismo que corre el pre-push y el CI
 ```
+
+## Documentación
+
+- [Arranque local y producción](docs/setup/arranque.md) · variables en `apps/*/.env.example`
+- [Modelo operativo del negocio](docs/domain/modelo-operativo.md) · [glosario](docs/domain/glossary.md)
+- [Paleta de colores](docs/design/paleta.md)
 
 ## Normas
 

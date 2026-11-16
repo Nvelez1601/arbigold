@@ -6,7 +6,7 @@
 
 - **Node 26 LTS** (`.nvmrc`) y npm 11: `nvm install && nvm use`. Los hooks de git **no dependen del Node de tu shell**: `.husky/node-env.sh` toma la v26.x más nueva instalada en nvm. Si no está, el hook falla y te dice qué instalar. No hace falta cambiar tu `nvm alias default`, así otros proyectos siguen con su versión.
 - **Scripts de instalación**: npm 11 no ejecuta los `postinstall` de las dependencias salvo aprobación explícita. Las decisiones viven en `allowScripts` del `package.json` raíz (hoy `esbuild` y `vue-demi` están denegados porque no los necesitan). Ante el aviso `install-scripts` de una dependencia nueva: `npm install-scripts ls`, revisa qué hace el script y apruébalo o deniégalo con justificación en el commit.
-- **Docker**, para la base local de Supabase.
+- **Un proyecto de Supabase de desarrollo** en la nube (no se usa Supabase local ni Docker; ver ADR-005).
 - `npm install` en la raíz instala todos los workspaces y activa Husky (script `prepare`).
 
 ## Qué corre en cada commit y en cada push (Husky)
@@ -54,11 +54,11 @@ npm run lint           # ESLint del repo completo
 npm run format         # Prettier --write
 npm run typecheck      # tsc / vue-tsc en todos los workspaces
 npm test               # unit (scripts + workspaces)
-npm run test:int       # integración (requiere npm run db:start)
+npm run test:int       # integración (contra el proyecto Supabase de desarrollo/test)
 npm run test:cov       # Regla 1: pisos POR ARCHIVO (80%, domain 95%)
 npm run coverage:diff  # Regla 2 contra origin/main (o: node scripts/coverage-gate.mjs <ref>)
 npm run spec:check     # principio de specs sobre todo el repo
-npm run db:start       # Supabase local (Docker): Postgres + Auth + Storage
+npm run db:push        # aplica supabase/migrations al proyecto vinculado (db:link) · db:migration <nombre> crea una
 npm run dev:backend    # API en :3000 (lee apps/backend/.env)
 npm run dev:frontend   # SPA en :5173
 ```
@@ -76,4 +76,4 @@ Viven en `.agents/skills/`, la fuente única que leen OpenCode, Codex y Cursor. 
 ## Pendiente
 
 - `scripts/spec-scaffold.mjs` (esqueleto de spec según el tipo de archivo).
-- `apps/backend/test/support/with-database.ts`: se implementa con el primer repository. Desde ese momento el pre-push y el CI necesitan Supabase local (`npm run db:start` / `supabase start` en CI).
+- `apps/backend/test/support/with-database.ts`: se implementa con el primer repository. Desde ese momento el pre-push y el CI necesitan `DATABASE_URL` del proyecto Supabase de **test** (nunca el de producción).

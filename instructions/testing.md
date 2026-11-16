@@ -17,7 +17,7 @@
 | ---------------------------------------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
 | `domain/**` (entities, VOs, services)                      | `*.spec.ts` (unit)                 | Funciones puras, sin dobles                                                                  | Mocks de cualquier tipo: el dominio no tiene dependencias que mockear           |
 | `application/**/*.use-case.ts`                             | `*.spec.ts` (unit)                 | Puertos reemplazados por **fakes in-memory** (`InMemoryOperationRepository`)                 | `vi.mock` de módulos de infraestructura                                         |
-| `infrastructure/persistence/**/*.repository.ts`            | `*.int.spec.ts` (integración)      | **Postgres real** (Supabase local) con `withDatabase()` y un rollback por test               | Mockear Kysely o `pg`. Si se mockea la DB, es unit y **no cuenta** para el gate |
+| `infrastructure/persistence/**/*.repository.ts`            | `*.int.spec.ts` (integración)      | **Postgres real** (proyecto Supabase de test) con `withDatabase()` y un rollback por test    | Mockear Kysely o `pg`. Si se mockea la DB, es unit y **no cuenta** para el gate |
 | `infrastructure/entrypoints/http/**` (routes + controller) | `*.int.spec.ts`                    | Supertest contra la app Express con el composition root de test                              | Llamar al controller como función suelta                                        |
 | `infrastructure/external_services/**`                      | `*.spec.ts`                        | Servidor HTTP simulado (MSW / nock) que respeta el contrato del proveedor                    | Hacer llamadas reales a internet                                                |
 | Puertos (`*.port.ts`)                                      | `*.contract.ts` (suite compartida) | Una suite que corre contra **todas** las implementaciones (in-memory y Kysely)               | Que el fake y la implementación real diverjan                                   |
@@ -59,17 +59,17 @@ No se baja el piso, no se agrega el archivo a la lista de exentos y no se marca 
 
 ## 4. Base de datos de test
 
-- Se levanta en local con **Supabase CLI**: `npx supabase start` (Docker) aplica `supabase/migrations/` y el resultado es el mismo schema, con las mismas políticas RLS, que en producción.
-- El helper `withDatabase()` (`apps/backend/test/support/with-database.ts`) abre una transacción por test y hace **rollback** al terminar: los tests no se pisan entre sí y no hace falta limpiar a mano.
+- **No hay Supabase local** (ADR-005). Los `*.int.spec.ts` corren contra un **proyecto de Supabase dedicado a desarrollo/test**, con las mismas migraciones (`npm run db:push`) y las mismas políticas RLS que producción. **Nunca contra el proyecto de producción.**
+- El helper `withDatabase()` (`apps/backend/test/support/with-database.ts`) abre una transacción por test y hace **rollback** al terminar: los tests no dejan datos en el proyecto, no se pisan entre sí y no hace falta limpiar a mano.
 - Por eso los repositorios reciben el ejecutor de Kysely (DB o transacción) por constructor: es el mismo diseño que permite las transacciones de doble entrada.
-- Hay builders de datos de prueba (`aSupplier().withBalance('10000.00 USD').build()`) en `test/support/builders/`; los tests no escriben INSERTs a mano.
-- En CI, el job usa `supabase/setup-cli` y el mismo `supabase start`.
+- Hay builders de datos de prueba (`aSupplier().withBalance('10000.00 USD').build()`) en `test/support/builders/`; los tests no escriben INSERTs a mano. **Los datos de prueba son siempre ficticios**: ni nombres ni montos reales de clientes o proveedores (el repo es público).
+- En CI, `DATABASE_URL` del proyecto de test entra como secreto de GitHub Actions.
 
 ## 5. Comandos (cópialos, no los reinventes)
 
 ```bash
 npm test                                    # unit de todos los workspaces
-npm run test:int                            # integración (requiere supabase start)
+npm run test:int                            # integración (contra el proyecto Supabase de test)
 npm run test:cov                            # Regla 1: piso por archivo (genera los coverage-final.json)
 npm run coverage:diff                       # Regla 2: lo agregado desde origin/main se ejecuta
 npm run verify                              # todo lo anterior + check: es lo que corre el pre-push
