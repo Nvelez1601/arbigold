@@ -6,7 +6,7 @@ ERP para la intermediación/arbitraje de oro: fondos de proveedores → asignaci
 
 ## Stack
 
-Node.js 24 LTS · TypeScript strict · Express 5 · Kysely + Supabase (PostgreSQL, Auth, Storage) · Zod · decimal.js · Vue 3 + Vite + Pinia + vue-query + PrimeVue + Tailwind · Vitest · Supertest · Playwright · npm workspaces. Detalle en `memory/decision_logs/ADR-001-stack-tecnologico.md`.
+Node.js 26 LTS · TypeScript strict · Express 5 · Kysely + Supabase (PostgreSQL, Auth, Storage) · Zod · decimal.js · Vue 3 + Vite + Pinia + vue-query + PrimeVue + Tailwind · Vitest · Supertest · Playwright · npm workspaces. Detalle en `memory/decision_logs/ADR-001-stack-tecnologico.md`.
 
 ## Mapa del repo
 

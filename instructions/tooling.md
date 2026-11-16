@@ -4,7 +4,8 @@
 
 ## Requisitos
 
-- **Node 24** (`.nvmrc`): `nvm install && nvm use`. Recomendado: `nvm alias default 24`, porque los hooks de git usan el Node por defecto de tu shell.
+- **Node 26 LTS** (`.nvmrc`) y npm 11: `nvm install && nvm use`. Los hooks de git **no dependen del Node de tu shell**: `.husky/node-env.sh` toma la v26.x más nueva instalada en nvm. Si no está, el hook falla y te dice qué instalar. No hace falta cambiar tu `nvm alias default`, así otros proyectos siguen con su versión.
+- **Scripts de instalación**: npm 11 no ejecuta los `postinstall` de las dependencias salvo aprobación explícita. Las decisiones viven en `allowScripts` del `package.json` raíz (hoy `esbuild` y `vue-demi` están denegados porque no los necesitan). Ante el aviso `install-scripts` de una dependencia nueva: `npm install-scripts ls`, revisa qué hace el script y apruébalo o deniégalo con justificación en el commit.
 - **Docker**, para la base local de Supabase.
 - `npm install` en la raíz instala todos los workspaces y activa Husky (script `prepare`).
 
