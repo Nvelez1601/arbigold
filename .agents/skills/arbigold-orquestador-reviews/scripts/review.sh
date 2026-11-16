@@ -52,6 +52,7 @@ area_de() {
     supabase/migrations/*)                                   echo "db-rls|1" ;;
     apps/backend/src/*/treasury/*|apps/backend/src/*/*/treasury/*)   echo "treasury|1" ;;
     apps/backend/src/*/arbitrage/*|apps/backend/src/*/*/arbitrage/*) echo "arbitrage|1" ;;
+    apps/backend/src/*/exports/*|apps/backend/src/*/*/exports/*)     echo "exports|1" ;;
     apps/backend/src/*/compliance/*|apps/backend/src/*/*/compliance/*) echo "compliance|1" ;;
     apps/backend/src/*/identity/*|apps/backend/src/*/*/identity/*)   echo "identity|1" ;;
     apps/backend/src/*/audit/*|apps/backend/src/*/*/audit/*)         echo "audit|1" ;;

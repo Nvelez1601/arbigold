@@ -129,7 +129,7 @@ al modo completo (`plan.sh init` con lo ya hecho como `done`).
 
 | Área | Piso |
 |---|---|
-| `treasury`, `arbitrage` (dinero, asientos de doble entrada, liquidación, redondeo) | 8 |
+| `treasury`, `arbitrage`, `exports` (dinero, gramos, asientos de doble entrada, conciliación, liquidación) | 8 |
 | `compliance` (KYC, cifrado, documentos), `identity` (auth, RBAC, MFA), `audit` | 8 |
 | `supabase/migrations` (schema, RLS) | 9 |
 | Pantallas que ve el usuario final | 7 (gusto) |

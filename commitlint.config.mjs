@@ -1,6 +1,6 @@
 // Formato de commit (AGENTS.md): tipo(scope): descripción [| ARB-123]
 // Ej: feat(arbitrage): calcula margen neto | ARB-12
-const MODULES = ['treasury', 'sourcing', 'arbitrage', 'compliance', 'identity', 'audit'];
+const MODULES = ['treasury', 'sourcing', 'arbitrage', 'exports', 'compliance', 'identity', 'audit'];
 const AREAS = [
   'backend',
   'frontend',

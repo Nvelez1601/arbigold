@@ -72,7 +72,7 @@ de alcance en el chat tal cual**: es el entregable del descubrimiento. La últim
 
 | Área | Rol del agente | Catálogo (`references/catalogo-riesgos.md`) | Normas por referencia |
 |---|---|---|---|
-| ⚠ `treasury`, `arbitrage`, `domain-shared` | Senior QA de sistemas financieros | `§Dinero` `§Ledger` `§Concurrencia` `§Hexagonal` `§Specs` | `architecture.md` §5, `error-handling.md` |
+| ⚠ `treasury`, `arbitrage`, `exports`, `domain-shared` | Senior QA de sistemas financieros | `§Dinero` `§Ledger` `§Concurrencia` `§Hexagonal` `§Specs` | `architecture.md` §5, `error-handling.md` |
 | ⚠ `compliance` | Senior de seguridad y compliance KYC | `§Seguridad` `§KYC` `§Hexagonal` `§Specs` | `security-compliance.md` |
 | ⚠ `identity`, `audit` | Senior de seguridad (authn/authz y auditoría) | `§Seguridad` `§Auditoría` `§Errores` | `security-compliance.md`, `error-handling.md` §5 |
 | ⚠ `db-rls` | DBA con foco en seguridad Postgres/Supabase | `§SQL` `§RLS` `§Dinero` | `security-compliance.md` §1, ADR-001 |
