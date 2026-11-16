@@ -1,0 +1,62 @@
+# CI de ArbiGold — evidencia de control de cambios (ADR-002).
+# Una sola rama (main), sin PRs: este workflow NO bloquea, confirma lo que el pre-push
+# ya validó y deja el registro. Si queda en rojo, arreglarlo es lo primero.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Instalar dependencias (lockfile congelado)
+        run: npm ci
+
+      - name: Formato, lint, typecheck, specs y tests
+        run: npm run check
+
+      - name: Regla 1 — cobertura por archivo
+        run: npm run test:cov
+
+      - name: Regla 2 — lo agregado en este push se ejecuta
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [ -n "$BEFORE" ] && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            node scripts/coverage-gate.mjs "$BEFORE"
+          else
+            node scripts/coverage-gate.mjs
+          fi
+
+      - name: Dependencias vulnerables (high/critical)
+        run: npm audit --audit-level=high
+
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
