@@ -1,6 +1,7 @@
 import { BusinessRuleError, ValidationError } from '../shared/domain-error.ts';
 import { GoldWeight } from '../shared/gold-weight.vo.ts';
 import type { GoldPiece } from './gold-piece.vo.ts';
+import { type MaterialResidue, RESIDUE_LABELS } from './material-residue.vo.ts';
 
 export interface PackingListTotals {
   readonly pieces: number;
@@ -18,6 +19,7 @@ export interface CreatePackingListProps {
 
 interface PackingListState extends CreatePackingListProps {
   readonly pieces: readonly GoldPiece[];
+  readonly residues: readonly MaterialResidue[];
 }
 
 /**
@@ -31,7 +33,7 @@ export class PackingList {
     if (!props.id.trim() || !props.clientId.trim()) {
       throw new ValidationError('PACKING_LIST_INCOMPLETE', 'El packing list necesita id y cliente');
     }
-    return new PackingList({ ...props, pieces: [] });
+    return new PackingList({ ...props, pieces: [], residues: [] });
   }
 
   get id(): string {
@@ -50,6 +52,25 @@ export class PackingList {
     return this.state.pieces;
   }
 
+  /** Viruta y fundición: consideraciones sobre piezas existentes, fuera de los totales. */
+  get residues(): readonly MaterialResidue[] {
+    return this.state.residues;
+  }
+
+  /** Registra viruta o fundición de piezas que YA están en el packing list. No agrega piezas. */
+  addResidue(residue: MaterialResidue): PackingList {
+    const numbers = new Set(this.state.pieces.map(({ number }) => number));
+    const unknown = residue.fromPieces.filter((number) => !numbers.has(number));
+    if (unknown.length > 0) {
+      throw new BusinessRuleError(
+        'RESIDUE_FROM_UNKNOWN_PIECES',
+        `La ${RESIDUE_LABELS[residue.kind]} viene de piezas que no están en el packing list: ${unknown.join(', ')}`,
+        { packingListId: this.state.id, unknown },
+      );
+    }
+    return new PackingList({ ...this.state, residues: [...this.state.residues, residue] });
+  }
+
   addPiece(piece: GoldPiece): PackingList {
     if (this.state.pieces.some(({ number }) => number === piece.number)) {
       throw new BusinessRuleError(
@@ -61,7 +82,7 @@ export class PackingList {
     return new PackingList({ ...this.state, pieces: [...this.state.pieces, piece] });
   }
 
-  /** Sumatoria de piezas, peso bruto y peso fino (lo que se revisa cada semana). */
+  /** Sumatoria de piezas, peso bruto y peso fino. La viruta y la fundición NO suman aquí. */
   totals(): PackingListTotals {
     return this.state.pieces.reduce<PackingListTotals>(
       (acc, piece) => ({
