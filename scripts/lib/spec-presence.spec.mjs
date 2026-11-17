@@ -53,6 +53,13 @@ describe('expectedSpecs', () => {
     );
   });
 
+  it('las rutas de Vue Router del frontend aceptan un spec unitario', () => {
+    expect(expectedSpecs('apps/frontend/src/modules/sourcing/clients.routes.ts')).toEqual([
+      'apps/frontend/src/modules/sourcing/clients.routes.spec.ts',
+      'apps/frontend/src/modules/sourcing/clients.routes.int.spec.ts',
+    ]);
+  });
+
   it('pide Nombre.spec.ts para un componente Vue', () => {
     expect(expectedSpecs('apps/frontend/src/app/App.vue')).toEqual([
       'apps/frontend/src/app/App.spec.ts',

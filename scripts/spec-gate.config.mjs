@@ -21,8 +21,8 @@ export const EXEMPT_PATTERNS = [
 
 /** Archivos que solo se aceptan con spec de INTEGRACIÓN (DB real o HTTP real). */
 export const INTEGRATION_ONLY_PATTERNS = [
-  /\.repository\.ts$/,
-  /\.routes\.ts$/,
-  /\.controller\.ts$/,
+  /^apps\/backend\/.*\.repository\.ts$/,
+  /^apps\/backend\/.*\.routes\.ts$/,
+  /^apps\/backend\/.*\.controller\.ts$/,
   /\/infrastructure\/app\.ts$/,
 ];
