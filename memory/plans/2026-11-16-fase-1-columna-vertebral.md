@@ -17,9 +17,10 @@
 
 ## Hecho tras las respuestas del negocio (2026-11-17)
 
-| Id            | Entregable                                                                                                                                                           | Estado                |
-| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
-| f1-respuestas | Onza troy 31.1035; medidas hasta 3 decimales; comparativo por packing list (`compareWithAssay`); utilidad de exportación con CVM 1 % + 0.3 % (`computeExportProfit`) | ✅ 100 % de cobertura |
+| Id              | Entregable                                                                                                                                                           | Estado                |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| f1-respuestas   | Onza troy 31.1035; medidas hasta 3 decimales; comparativo por packing list (`compareWithAssay`); utilidad de exportación con CVM 1 % + 0.3 % (`computeExportProfit`) | ✅ 100 % de cobertura |
+| f1-aclaraciones | Viruta/fundición como consideración del packing list (`MaterialResidue`); liquidación de terceros por utilidad o cobro total en dinero (`settleThirdPartyExport`)    | ✅ 100 % de cobertura |
 
 ## Pendiente (las preguntas del §7 están respondidas)
 
