@@ -8,6 +8,7 @@ import type { Component } from 'vue';
 import { createMemoryHistory } from 'vue-router';
 import { createAppRouter } from '../../src/app/router.ts';
 import { ArbiGoldPreset } from '../../src/app/theme/arbigold-preset.ts';
+import { PRIMEVUE_LOCALE_ES } from '../../src/app/theme/primevue-locale-es.ts';
 
 /**
  * Monta un componente con TODO lo que tiene la app real: router (en memoria), PrimeVue con el
@@ -31,7 +32,7 @@ export const mountWithApp = async <C extends Component>(
       plugins: [
         router,
         createPinia(),
-        [PrimeVue, { theme: { preset: ArbiGoldPreset } }],
+        [PrimeVue, { theme: { preset: ArbiGoldPreset }, locale: PRIMEVUE_LOCALE_ES }],
         ToastService,
         ConfirmationService,
         [VueQueryPlugin, { queryClient }],

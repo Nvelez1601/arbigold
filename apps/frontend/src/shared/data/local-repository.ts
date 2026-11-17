@@ -51,10 +51,12 @@ const createStore = <TRecord extends { id: string }, TInput>(
   options: LocalRepositoryOptions<TRecord, TInput>,
 ) => {
   const memory = { value: '[]' };
-  const storage = options.storage ?? safeLocalStorage(memory);
+  // Se resuelve en cada acceso (no al importar): si el navegador o un test cambian el
+  // almacenamiento, el repositorio usa el vigente.
+  const storage = () => options.storage ?? safeLocalStorage(memory);
   return {
-    read: (): TRecord[] => parseAll(storage.getItem(options.key), options.schema),
-    write: (records: readonly TRecord[]) => storage.setItem(options.key, JSON.stringify(records)),
+    read: (): TRecord[] => parseAll(storage().getItem(options.key), options.schema),
+    write: (records: readonly TRecord[]) => storage().setItem(options.key, JSON.stringify(records)),
     meta: () => ({
       id: (options.newId ?? (() => crypto.randomUUID()))(),
       createdAt: (options.now ?? (() => new Date()))().toISOString(),

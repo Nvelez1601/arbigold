@@ -8,7 +8,7 @@ import {
   suppliersRepository,
 } from './repositories.ts';
 
-/** Node 26 trae su propio localStorage vacío: los tests instalan uno en memoria. */
+/** Node 26 trae su propio localStorage vacío: cada test instala uno nuevo y aislado. */
 beforeEach(() => {
   const data = new Map<string, string>();
   Object.defineProperty(globalThis, 'localStorage', {
@@ -68,6 +68,10 @@ describe('repositorios del modo demostración', () => {
       packingListIds: [list.id],
     });
     expect(shipment.status).toBe('PREPARACION');
+  });
+
+  it('cada test arranca con su propio almacenamiento (se resuelve en cada acceso)', async () => {
+    expect(await clientsRepository.list()).toEqual([]);
   });
 
   it('rechaza lo que no cumple el contrato', async () => {
