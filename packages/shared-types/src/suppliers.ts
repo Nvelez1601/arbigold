@@ -14,7 +14,11 @@ import {
 export const SUPPLIER_KINDS = ['FONDEO', 'TERCEROS'] as const;
 
 export const supplierInputSchema = z.object({
-  name: z.string().trim().min(2, { message: 'Escribe al menos 2 caracteres' }).max(120),
+  name: z
+    .string()
+    .trim()
+    .min(2, { message: 'Escribe al menos 2 caracteres' })
+    .max(120, { message: 'Máximo 120 caracteres' }),
   kind: z.enum(SUPPLIER_KINDS),
   country: shortText,
   currency: currencySchema,

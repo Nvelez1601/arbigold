@@ -38,3 +38,13 @@ describe('contrato de cliente', () => {
     expect(clientSchema.parse(record).id).toBe('c-1');
   });
 });
+
+describe('nombre demasiado largo', () => {
+  it('lo explica en español', async () => {
+    const schema = (await import('./clients.ts')).clientInputSchema;
+    const base = { kind: 'PERSONA' };
+    expect(schema.safeParse({ ...base, name: 'x'.repeat(121) }).error?.issues[0]?.message).toBe(
+      'Máximo 120 caracteres',
+    );
+  });
+});

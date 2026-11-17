@@ -35,3 +35,13 @@ describe('contrato de proveedor', () => {
     expect(supplierSchema.parse(record).active).toBe(false);
   });
 });
+
+describe('nombre demasiado largo', () => {
+  it('lo explica en español', async () => {
+    const schema = (await import('./suppliers.ts')).supplierInputSchema;
+    const base = { kind: 'FONDEO', currency: 'USDT' };
+    expect(schema.safeParse({ ...base, name: 'x'.repeat(121) }).error?.issues[0]?.message).toBe(
+      'Máximo 120 caracteres',
+    );
+  });
+});

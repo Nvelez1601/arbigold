@@ -1,5 +1,9 @@
 import { z } from 'zod';
 
+// Red de seguridad: cualquier mensaje de Zod sin texto propio sale en español, nunca en inglés.
+// Los campos que ve el usuario llevan además su mensaje humano.
+z.config(z.locales.es());
+
 const DECIMAL = /^\d+(\.\d+)?$/;
 const decimalsOf = (value: string): number => value.split('.')[1]?.length ?? 0;
 
@@ -40,7 +44,8 @@ export type Currency = z.infer<typeof currencySchema>;
 /** Fecha de calendario AAAA-MM-DD (sin hora: el negocio registra por día). */
 export const isoDate = z.iso.date({ message: 'Fecha inválida (AAAA-MM-DD)' });
 
-export const idSchema = z.string().min(1);
+/** Referencia a otra entidad (lo que se elige en un Select). */
+export const idSchema = z.string().min(1, { message: 'Selecciona una opción de la lista' });
 const optionalText = (max: number) =>
   z
     .string()

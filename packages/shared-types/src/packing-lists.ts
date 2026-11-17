@@ -16,7 +16,10 @@ export const PACKING_LIST_STATUSES = [
 ] as const;
 
 export const pieceSchema = z.object({
-  number: z.number().int().min(1),
+  number: z
+    .number({ message: 'Número de pieza inválido' })
+    .int({ message: 'El número de pieza es entero' })
+    .min(1, { message: 'Las piezas se numeran desde 1' }),
   grossWeight: measurementString,
   /** Ley como la escriben (fracción, % o ‰); el sistema la normaliza a ‰. */
   fineness: finenessString,

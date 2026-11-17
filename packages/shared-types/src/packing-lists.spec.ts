@@ -59,3 +59,14 @@ describe('contrato de packing list', () => {
     expect(packingListSchema.parse(record).exportId).toBe('ex-1');
   });
 });
+
+describe('número de pieza', () => {
+  it('explica en español por qué un número de pieza no vale', async () => {
+    const { pieceSchema } = await import('./packing-lists.ts');
+    const message = (number: number) =>
+      pieceSchema.safeParse({ number, grossWeight: '1', fineness: '900' }).error?.issues[0]
+        ?.message;
+    expect(message(0)).toBe('Las piezas se numeran desde 1');
+    expect(message(1.5)).toBe('El número de pieza es entero');
+  });
+});

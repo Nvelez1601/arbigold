@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { z } from 'zod';
 import {
   amountString,
   currencySchema,
   decimalString,
+  idSchema,
   finenessString,
   isoDate,
   measurementString,
@@ -64,5 +66,18 @@ describe('otros campos', () => {
     expect(notesSchema.parse('')).toBeUndefined();
     expect(notesSchema.parse('  ok ')).toBe('ok');
     expect(ok(notesSchema, 'x'.repeat(501))).toBe(false);
+  });
+});
+
+describe('mensajes en español', () => {
+  it('pide elegir una opción cuando falta la referencia', () => {
+    expect(idSchema.safeParse('').error?.issues[0]?.message).toBe(
+      'Selecciona una opción de la lista',
+    );
+  });
+
+  it('nunca muestra mensajes de Zod en inglés, ni siquiera sin mensaje propio', () => {
+    const message = z.string().max(3).safeParse('abcd').error?.issues[0]?.message ?? '';
+    expect(message).toMatch(/^Demasiado grande/);
   });
 });
