@@ -9,7 +9,7 @@
 | Lote de oro           | `GoldLot`            | Unidad física recibida, con peso, pureza y origen                |
 | Lista de empaque      | `PackingList`        | Detalle de los lotes de un envío                                 |
 | Pureza / ley          | `Purity` (fineness)  | Proporción de oro fino (p. ej. 0.999)                            |
-| Peso                  | `GoldWeight`         | Gramos (`Decimal`); onza troy = 31.1034768 g                     |
+| Peso                  | `GoldWeight`         | Gramos (`Decimal`); onza troy = 31.1035 g (la del negocio)       |
 | Tasa de cambio        | `ExchangeRate`       | Par de monedas + valor `Decimal` + fuente + fecha                |
 | Dinero                | `Money`              | Monto `Decimal` + moneda ISO 4217                                |
 | Liquidación           | `Settlement`         | Cierre de la operación: retorno al proveedor                     |

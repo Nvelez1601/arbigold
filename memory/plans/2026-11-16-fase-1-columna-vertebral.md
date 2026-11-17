@@ -15,7 +15,13 @@
 | f1-config       | `env.ts` con DB, Supabase, logs y proxy; `.env.example` de la API y del frontend               | ✅                             |
 | f1-paleta       | Tokens, preset de PrimeVue y CSS con verificación de contraste en tests                        | ✅                             |
 
-## Pendiente — requiere validar las preguntas abiertas del modelo operativo (§7)
+## Hecho tras las respuestas del negocio (2026-11-17)
+
+| Id            | Entregable                                                                                                                                                           | Estado                |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
+| f1-respuestas | Onza troy 31.1035; medidas hasta 3 decimales; comparativo por packing list (`compareWithAssay`); utilidad de exportación con CVM 1 % + 0.3 % (`computeExportProfit`) | ✅ 100 % de cobertura |
+
+## Pendiente (las preguntas del §7 están respondidas)
 
 | Id              | Tarea                                                                                                                                     | Dif. | Depende de               |
 | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ---- | ------------------------ |

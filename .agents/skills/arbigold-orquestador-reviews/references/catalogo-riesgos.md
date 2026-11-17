@@ -8,7 +8,7 @@ documentada en `instructions/` siempre gana.
 - ¿Algún monto, tasa, peso o pureza pasa por `number`, `parseFloat`, `toFixed`, `Math.round` o `JSON` sin string? (debe ser `Decimal` o un VO).
 - ¿Hay sumas o comparaciones entre `Money` de **monedas distintas** sin pasar por una `ExchangeRate` explícita?
 - ¿El redondeo usa la `RoundingPolicy` central, con el modo y la escala correctos? ¿Se redondea en pasos intermedios (error acumulado)?
-- ¿La conversión gramos ↔ onza troy usa la constante única (31.1034768)? ¿La pureza se aplica una sola vez?
+- ¿La conversión gramos ↔ onza troy usa la constante única `TROY_OUNCE_IN_GRAMS` (31.1035, la del negocio)? ¿La pureza se aplica una sola vez?
 - ¿Un monto negativo, cero o con más decimales que la escala de la moneda se rechaza en el VO?
 - ¿El margen de arbitraje se calcula en el dominio (backend), y el front solo lo muestra?
 

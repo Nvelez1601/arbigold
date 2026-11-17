@@ -29,34 +29,39 @@ de pureza en Caracas, pagos y tesorería, documentación de exportación y direc
 
 ## 3. Conceptos
 
-| Concepto                     | Definición                                                                                                                                                                                                              |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Peso bruto**               | Gramos que marca la balanza, sin aplicar la ley. **Todo el oro se mide en gramos.**                                                                                                                                     |
-| **Ley**                      | Pureza de la pieza. El sistema la guarda **siempre en milésimas (‰)**, de 0 a 1000. En los registros aparece en tres escalas: fracción (`0.875`), porcentaje (`94.5`) y milésimas (`920.5`). Se normaliza por magnitud. |
-| **Peso fino** (o "puro")     | El oro real de la pieza: `bruto × ley / 1000` ✓                                                                                                                                                                         |
-| **P. INT**                   | Precio internacional del oro, en USD por onza troy                                                                                                                                                                      |
-| **Cierre**                   | Fija cuántos gramos finos vale un monto, a un porcentaje del P. INT                                                                                                                                                     |
-| **Consignado / depósito**    | Dinero entregado al cliente (o recibido del proveedor)                                                                                                                                                                  |
-| **Gramos cerrados**          | Gramos finos que una parte queda debiendo o que se le deben por un cierre                                                                                                                                               |
-| **Entrega**                  | Gramos finos entregados (los del packing list) que descuentan la deuda                                                                                                                                                  |
-| **Saldo en gramos**          | `Σ cerrado − Σ entregado`. Positivo: la parte debe oro. Negativo: se le debe dinero                                                                                                                                     |
-| **Packing list**             | Lista de piezas que entrega un cliente (número, bruto, ley, fino) con sus totales                                                                                                                                       |
-| **Exportación / envío**      | Salida de oro que agrupa packing lists de uno o varios clientes                                                                                                                                                         |
-| **Comparativo / diferencia** | `fino de la refinería − fino original`. Negativo = merma (se le cobra al cliente); positivo = se le acredita                                                                                                            |
-| **Resguardo**                | Material en custodia en Caracas, todavía no exportado                                                                                                                                                                   |
-| **Token / lote**             | Código que agrupa piezas de un mismo origen (aparece en las exportaciones a compradores árabes)                                                                                                                         |
-| **Comisión de envío**        | Cargo en gramos que se descuenta al liquidar un envío con el proveedor                                                                                                                                                  |
+| Concepto                    | Definición                                                                                                                                                                                                                                                                                                            |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Peso bruto**              | Gramos que marca la balanza, sin aplicar la ley. **Todo el oro se mide en gramos.**                                                                                                                                                                                                                                   |
+| **Ley**                     | Pureza de la pieza. El sistema la guarda **siempre en milésimas (‰)**, de 0 a 1000. En los registros aparece en tres escalas: fracción (`0.875`), porcentaje (`94.5`) y milésimas (`920.5`). Se normaliza por magnitud.                                                                                               |
+| **Peso fino** (o "puro")    | El oro real de la pieza: `bruto × ley / 1000` ✓                                                                                                                                                                                                                                                                       |
+| **P. INT**                  | Precio internacional del oro, en USD por onza troy                                                                                                                                                                                                                                                                    |
+| **Cierre**                  | Fija cuántos gramos finos vale un monto, a un porcentaje del P. INT                                                                                                                                                                                                                                                   |
+| **Consignado / depósito**   | Dinero entregado al cliente (o recibido del proveedor)                                                                                                                                                                                                                                                                |
+| **Gramos cerrados**         | Gramos finos que una parte queda debiendo o que se le deben por un cierre                                                                                                                                                                                                                                             |
+| **Entrega**                 | Gramos finos entregados (los del packing list) que descuentan la deuda                                                                                                                                                                                                                                                |
+| **Saldo en gramos**         | `Σ cerrado − Σ entregado`. Positivo: la parte debe oro. Negativo: se le debe dinero                                                                                                                                                                                                                                   |
+| **Packing list**            | Lista de piezas que entrega un cliente (número, bruto, ley, fino) con sus totales                                                                                                                                                                                                                                     |
+| **Exportación / envío**     | Salida de oro que agrupa packing lists de uno o varios clientes                                                                                                                                                                                                                                                       |
+| **Comparativo**             | Por cada packing list: original del cliente (su ley, normalmente de pistola) vs **análisis** de Caracas o de la refinería. El peso no cambia, cambia la ley. `diferencia = fino del análisis − fino original`. Negativo: se le cobra al cliente; positivo: se le acredita. El % se expresa sobre el fino del análisis |
+| **CVM y exportación**       | Deducciones obligatorias de toda exportación: **1 % de CVM y 0.3 % de exportación sobre el peso fino**. Las paga la empresa                                                                                                                                                                                           |
+| **Utilidad de exportación** | % negociado en cada trato (p. ej. 1.5 %, 2 %, 2.5 %) sobre el fino, **menos** las deducciones                                                                                                                                                                                                                         |
+| **Material de terceros**    | Piezas que llevan token y guardia/custodio: son material de los compradores árabes, con una negociación aparte. En el balance entra la utilidad de ese envío o el cobro total, según el trato                                                                                                                         |
+| **Resguardo**               | Material en custodia en Caracas, todavía no exportado                                                                                                                                                                                                                                                                 |
+| **Token / lote**            | Código que agrupa piezas de un mismo origen (aparece en las exportaciones a compradores árabes)                                                                                                                                                                                                                       |
+| **Comisión de envío**       | Cargo en gramos que se descuenta al liquidar un envío con el proveedor                                                                                                                                                                                                                                                |
 
 ## 4. Fórmulas
 
 ```
 peso fino           = peso bruto × ley(‰) / 1000                  ej. 500 g × 920 ‰ = 460 g
-precio por gramo    = P. INT / 31.1034768                         ej. 4000 USD/oz → 128.6030 USD/g
-precio negociado    = precio por gramo × porcentaje / 100         ej. × 95 % → 122.1728 USD/g
-gramos cerrados     = monto / precio negociado                    ej. 100 000 USDT → 818.5125 g
+precio por gramo    = P. INT / 31.1035 (onza troy del negocio)    ej. 4000 USD/oz → 128.6029 USD/g
+precio negociado    = precio por gramo × porcentaje / 100         ej. × 95 % → 122.1727 USD/g
+gramos cerrados     = monto / precio negociado                    ej. 100 000 USDT → 818.5132 g
 margen (gramos)     = gramos cerrados al % del cliente − gramos cerrados al % del proveedor
 saldo (gramos)      = Σ gramos cerrados − Σ gramos entregados
-diferencia          = fino refinería − fino original (por pieza o por cliente)
+comparativo         = fino del análisis − fino original (por pieza; total por packing list)
+comparativo %       = comparativo / fino del análisis × 100            ej. −7 g / 3193 g = −0.22 %
+utilidad exportación= fino × (% negociado − 1 % CVM − 0.3 % exportación) ej. 10 000 g al 2 % → 70 g netos
 reparto en bloque   = fino refinería total × (fino original del cliente / fino original total)
 ```
 
@@ -90,8 +95,10 @@ Implementación (dominio puro, cobertura del 100 %):
 suppliers ──< operations >── clients
                  │ (cierre: monto, P. INT, % cliente, % proveedor)
 clients ──< packing_lists ──< packing_list_pieces (número, bruto, ley ‰, fino)
-exports ──< packing_lists          (una exportación agrupa 1..N packing lists; un packing list sale en UNA exportación)
-exports ──< refinery_results        (por pieza, o un total si se fundió en bloque)
+suppliers ──< exports ──< packing_lists   (una exportación va a UN proveedor y agrupa 1..N packing lists; un packing list no se divide)
+packing_lists ──< assays            (análisis de Caracas o de la refinería, por pieza → comparativo)
+exports ──< third_party_pieces       (material de terceros: token, custodio, pieza original; liquidación UTILIDAD | COBRO_TOTAL)
+exports                              (% de utilidad negociado + deducciones CVM 1 % y exportación 0.3 %)
 ledger_entries                       (doble entrada en gramos y en dinero, por cliente y por proveedor)
 ```
 
@@ -101,17 +108,24 @@ Estados:
 - **Exportación:** `PREPARACION → DOCUMENTACION → ENVIADA → CON_RESULTADO → LIQUIDADA`
 - **Operación:** `ABIERTA (cerrada en precio, pendiente de entrega) → CUMPLIDA (saldo 0) | CANCELADA`
 
-## 7. Preguntas abiertas para el negocio
+## 7. Respuestas del negocio (2026-11-16) y cómo quedan en el sistema
 
-1. **Onza troy:** los registros usan `31.1035`; el sistema usa el estándar `31.1034768`. Diferencia: 0.0076 g por cada 10 kg. ¿Se acepta el estándar o se replica `31.1035` para cuadrar con el histórico?
-2. **Ley de referencia:** ¿qué ley descuenta la deuda del cliente: la de su análisis (pistola), la verificación de Caracas o la de la refinería? Hoy existen dos comparativos (cliente vs Caracas y original vs refinería).
-3. **Escalas de la ley:** se interpretan por magnitud (≤ 1 fracción, ≤ 100 porcentaje, ≤ 1000 milésimas). ¿Existe alguna ley real por debajo de 100 ‰ que rompa esta regla?
-4. **Compradores árabes:** ¿son proveedores (adelantan fondos) o compradores con otro esquema? Sus registros calculan "utilidades" como % sobre el fino exportado (1.5 %, 0.6 %, 1.6 %).
-5. **Comisión de envío:** ¿es un % del fino o un monto fijo en gramos? ¿La paga el proveedor o se reparte entre clientes?
-6. **Exportaciones divididas:** si una exportación se reparte entre dos compradores (p. ej. 50 kg y 50 kg), ¿un packing list puede partirse o siempre va completo a un solo comprador?
-7. **Piezas especiales:** ¿cómo se registran la "viruta" y las "fundiciones" que aparecen en algunos envíos?
-8. **Precisión:** ¿con cuántos decimales se registran los gramos y la ley? (Se ven hasta 2 decimales en el peso y 2 en la ley en milésimas.)
-9. **Token / custodio / pieza original:** ¿son datos obligatorios de toda pieza o solo de las exportaciones a compradores árabes?
+| #   | Pregunta                | Respuesta                                                                                                                                                         | En el sistema                                                                                                                                |
+| --- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Onza troy               | Se usa **31.1035**                                                                                                                                                | `TROY_OUNCE_IN_GRAMS = 31.1035` (decisión del negocio, no el valor físico 31.1034768)                                                        |
+| 2   | Ley de referencia       | La diferencia se le cobra al cliente **cuando llegan los resultados**, sean de Caracas o de la refinería                                                          | `compareWithAssay` con fuente `CARACAS` o `REFINERY`; el resultado ajusta el saldo del cliente                                               |
+| 3   | Escalas de la ley       | El negocio normaliza la ley a mano; los clientes la envían de distintas formas                                                                                    | El sistema normaliza solo (fracción, porcentaje o milésimas) y la guarda en ‰                                                                |
+| 4   | Compradores árabes      | La utilidad depende del trato (p. ej. 1.5 %, 2 %, 2.5 %) y **siempre** se le restan 1 % de CVM y 0.3 % de exportación                                             | `computeExportProfit`: % negociado − deducciones; las deducciones son configurables por trato                                                |
+| 5   | Comisión                | La CVM la paga la empresa; sale del peso fino. 1 % CVM + 0.3 % exportación                                                                                        | Son deducciones de la exportación (costo de la empresa), no se reparten entre clientes                                                       |
+| 6   | Exportaciones divididas | Si el material se reparte entre dos proveedores, **cada uno es un packing list distinto**, y a cada proveedor se le paga lo suyo                                  | Una exportación va a **un solo** proveedor; un packing list nunca se divide                                                                  |
+| 7   | Piezas especiales       | Cada cliente tiene su packing de entrega; cualquier novedad con una pieza se informa al cliente mediante el comparativo                                           | Toda pieza pertenece al packing list de un cliente; las novedades salen en el comparativo                                                    |
+| 8   | Precisión               | Venezuela registra 2 decimales; árabes y turcos reportan de 1 a 3                                                                                                 | Las medidas (peso bruto, ley en ‰) admiten **hasta 3 decimales**; los cálculos no se truncan y se muestran con 2                             |
+| 9   | Token / custodio        | Las piezas con token o guardia son **material de los árabes**, con negociación aparte. En el balance entra la utilidad del envío o el cobro total, según el trato | Material de **terceros** en la exportación, con modo de liquidación `UTILIDAD` o `COBRO_TOTAL` (pendiente de modelar en la entidad `Export`) |
+
+### Pendiente de precisar (no bloquea)
+
+- **Material de terceros (respuesta 9):** qué es exactamente el "cobro total" (¿un monto fijo en dinero, o un % sobre el fino?) y si esas piezas pasan por el comparativo igual que las de los clientes.
+- **Viruta y fundición:** confirmar que se registran como una pieza más del packing list del cliente que corresponde.
 
 ## 8. Fuera del alcance de la fase 1
 

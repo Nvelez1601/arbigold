@@ -74,7 +74,7 @@ Reglas entre módulos:
 
 ## 5. Reglas del dominio financiero
 
-- **Dinero, tasas y pesos nunca son `number`.** Se usan los value objects `Money` (monto `Decimal` + moneda ISO 4217), `ExchangeRate` y `GoldWeight` (gramos `Decimal` + pureza). La conversión de onza troy usa `1 ozt = 31.1034768 g`, definida como constante única.
+- **Dinero, tasas y pesos nunca son `number`.** Se usan los value objects `Money` (monto `Decimal` + moneda ISO 4217), `ExchangeRate` y `GoldWeight` (gramos `Decimal` + pureza). La conversión de onza troy usa `1 ozt = 31.1035 g` (la del negocio, ver modelo operativo §7), definida como constante única `TROY_OUNCE_IN_GRAMS`.
 - En Postgres, `numeric(precision, scale)`: nunca `float` ni `double precision`.
 - El redondeo es explícito y está centralizado (`RoundingPolicy`). Nada de `toFixed()` disperso.
 - **Todo movimiento de fondos es doble entrada**: un asiento con débitos y créditos que suman cero, escrito en una sola transacción. Un asiento contable no se edita ni se borra; se reversa con otro asiento.
