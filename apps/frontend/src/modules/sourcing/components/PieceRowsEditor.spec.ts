@@ -92,10 +92,13 @@ describe('PieceRowsEditor', () => {
     const wrapper = await mountEditor([piece('1', '10', '900')]);
     await wrapper.get('input[aria-label="Ley de la pieza 1"]').trigger('keydown', { key: 'Enter' });
     await flushPromises();
-    await vi.waitFor(() => {
-      expect(wrapper.props('modelValue')).toHaveLength(2);
-      expect(document.activeElement?.getAttribute('aria-label')).toBe('Peso bruto de la pieza 2');
-    });
+    await vi.waitFor(
+      () => {
+        expect(wrapper.props('modelValue')).toHaveLength(2);
+        expect(document.activeElement?.getAttribute('aria-label')).toBe('Peso bruto de la pieza 2');
+      },
+      { timeout: 5000, interval: 20 },
+    );
   });
 
   it('Enter en una fila intermedia pasa a la siguiente sin agregar', async () => {

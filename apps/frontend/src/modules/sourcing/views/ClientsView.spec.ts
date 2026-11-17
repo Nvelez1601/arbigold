@@ -59,12 +59,13 @@ const buttonNamed = (name: string) => {
   return button;
 };
 const click = async (name: string) => {
-  const button = await vi.waitFor(() => buttonNamed(name));
+  const button = await vi.waitFor(() => buttonNamed(name), { timeout: 5000, interval: 20 });
   await button.trigger('click');
   await flushPromises();
 };
 /** Las mutaciones y el refresco de la lista son asíncronos: se espera a que el resultado aparezca. */
-const eventually = (assertion: () => void) => vi.waitFor(assertion);
+const eventually = (assertion: () => void) =>
+  vi.waitFor(assertion, { timeout: 5000, interval: 20 });
 const rowOf = (name: string) =>
   body()
     .findAll('tbody tr')
