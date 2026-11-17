@@ -14,8 +14,17 @@ export const decimalString = z
   .transform((value) => value.replace(',', '.'))
   .refine((value) => DECIMAL.test(value), { message: 'Ingresa un número, p. ej. 1250.50' });
 
+/** `1.000` es ambiguo en es-VE: puede ser mil o uno con tres decimales. Se rechaza. */
+const THOUSANDS_LIKE = /^\d{1,3}(\.\d{3})+$/;
+
 /** Medida física (peso bruto en gramos o ley en ‰): mayor a 0 y hasta 3 decimales. */
-export const measurementString = decimalString
+export const measurementString = z
+  .string()
+  .trim()
+  .refine((value) => !THOUSANDS_LIKE.test(value), {
+    message: 'Escribe el peso sin punto de miles (p. ej. 1000 o 1500,5)',
+  })
+  .pipe(decimalString)
   .refine((value) => Number.parseFloat(value) > 0, { message: 'Debe ser mayor a 0' })
   .refine((value) => decimalsOf(value) <= 3, { message: 'Máximo 3 decimales' });
 

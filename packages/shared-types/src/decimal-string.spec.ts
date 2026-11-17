@@ -31,6 +31,13 @@ describe('números como texto', () => {
     expect(ok(measurementString, '10.1234')).toBe(false);
   });
 
+  it('una medida con puntos de miles como 1.000 se rechaza como ambigua', () => {
+    expect(ok(measurementString, '1.000')).toBe(false);
+    expect(ok(measurementString, '1.500')).toBe(false);
+    expect(ok(measurementString, '12.000')).toBe(false);
+    expect(ok(measurementString, '1000')).toBe(true);
+  });
+
   it('la ley acepta fracción, porcentaje o milésimas hasta 1000', () => {
     expect(['0.9205', '94.5', '920.5'].every((v) => ok(finenessString, v))).toBe(true);
     expect(ok(finenessString, '1000.5')).toBe(false);
