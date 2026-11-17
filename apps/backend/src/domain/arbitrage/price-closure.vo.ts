@@ -17,7 +17,7 @@ export interface PriceClosureProps {
 
 /**
  * Cierre de precio: fija cuántos gramos FINOS vale un monto de dinero.
- *   precio por gramo  = P. INT / 31.1034768
+ *   precio por gramo  = P. INT / 31.1035 (onza troy del negocio)
  *   precio negociado  = precio por gramo × porcentaje / 100
  *   gramos cerrados   = monto / precio negociado
  */

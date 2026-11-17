@@ -12,10 +12,10 @@ describe('PriceClosure (cierre de precio)', () => {
       internationalPricePerOunce: '4000',
       percentage: '95',
     });
-    // Con la onza troy exacta (31.1034768 g); ver la pregunta abierta 1 del modelo operativo.
-    expect(closure.pricePerGram.toDecimalPlaces(4).toString()).toBe('128.603');
-    expect(closure.agreedPricePerGram.toDecimalPlaces(4).toString()).toBe('122.1728');
-    expect(closure.closedFineWeight.grams.toDecimalPlaces(4).toString()).toBe('818.5125');
+    // Con la onza troy del negocio (31.1035 g).
+    expect(closure.pricePerGram.toDecimalPlaces(4).toString()).toBe('128.6029');
+    expect(closure.agreedPricePerGram.toDecimalPlaces(4).toString()).toBe('122.1727');
+    expect(closure.closedFineWeight.grams.toDecimalPlaces(4).toString()).toBe('818.5132');
   });
 
   it('a menor porcentaje, el mismo dinero cierra más gramos', () => {

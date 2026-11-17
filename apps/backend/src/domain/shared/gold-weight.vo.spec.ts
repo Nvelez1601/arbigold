@@ -22,9 +22,9 @@ describe('GoldWeight', () => {
     expect(refinery.differenceFrom(original).toString()).toBe('-0.75');
   });
 
-  it('convierte a onzas troy con la constante única', () => {
-    expect(TROY_OUNCE_IN_GRAMS.toString()).toBe('31.1034768');
-    expect(GoldWeight.ofGrams('31.1034768').toTroyOunces().toString()).toBe('1');
+  it('convierte a onzas troy con la constante que usa el negocio (31.1035)', () => {
+    expect(TROY_OUNCE_IN_GRAMS.toString()).toBe('31.1035');
+    expect(GoldWeight.ofGrams('31.1035').toTroyOunces().toString()).toBe('1');
   });
 
   it('compara pesos por valor', () => {

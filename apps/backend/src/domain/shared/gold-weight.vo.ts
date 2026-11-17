@@ -2,8 +2,12 @@ import { Decimal } from 'decimal.js';
 import { toDecimal } from './decimal-value.ts';
 import { ValidationError } from './domain-error.ts';
 
-/** Onza troy en gramos: el precio internacional del oro se cotiza en USD por onza troy. */
-export const TROY_OUNCE_IN_GRAMS = new Decimal('31.1034768');
+/**
+ * Onza troy en gramos, tal como la usa el negocio: 31.1035 (decisión del 2026-11-16).
+ * El valor físico exacto es 31.1034768; se usa el del negocio para que los cierres cuadren al
+ * céntimo con sus registros y con los de sus contrapartes (≈ 0.0076 g de diferencia por 10 kg).
+ */
+export const TROY_OUNCE_IN_GRAMS = new Decimal('31.1035');
 
 /** Peso físico de oro en GRAMOS (todo el negocio opera en gramos). Nunca negativo. */
 export class GoldWeight {
