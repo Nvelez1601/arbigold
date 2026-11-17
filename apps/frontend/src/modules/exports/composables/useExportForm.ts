@@ -28,6 +28,12 @@ export const EXPORT_STATUS_SEVERITY: Record<ExportStatus, string> = {
   LIQUIDADA: 'success',
 };
 
+/** Valida el query `?estado=` de la URL: si no es un estado conocido, la tabla no filtra. */
+export const validExportStatusFilter = (value: unknown): ExportStatus | '' =>
+  typeof value === 'string' && Object.hasOwn(EXPORT_STATUS_LABELS, value)
+    ? (value as keyof typeof EXPORT_STATUS_LABELS)
+    : '';
+
 export const EXPORT_STATUS_FILTER_OPTIONS = [
   { label: 'Todos los estados', value: '' },
   ...EXPORT_STATUSES.map((status) => ({ label: EXPORT_STATUS_LABELS[status], value: status })),

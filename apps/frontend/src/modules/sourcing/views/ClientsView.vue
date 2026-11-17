@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Client } from '@arbigold/shared-types';
-import { Pencil, Power, PowerOff, Search, UserPlus, Users } from 'lucide-vue-next';
+import { Pencil, Search, UserPlus, Users } from 'lucide-vue-next';
 import Button from 'primevue/button';
 import Column from 'primevue/column';
 import DataTable from 'primevue/datatable';
@@ -19,7 +19,12 @@ import PageHeader from '../../../shared/components/PageHeader.vue';
 import { QUERY_KEYS, clientsRepository } from '../../../shared/data/repositories.ts';
 import { formatPercent } from '../../../shared/utils/format.ts';
 import ClientFormDialog from '../components/ClientFormDialog.vue';
-import { type ValidClientInput, useClientSearch } from '../composables/useClientForm.ts';
+import {
+  type ValidClientInput,
+  type StatusAction,
+  statusActionFor,
+  useClientSearch,
+} from '../composables/useClientForm.ts';
 
 const KIND_LABELS: Record<Client['kind'], string> = { PERSONA: 'Persona', EMPRESA: 'Empresa' };
 interface ClientColumn {
@@ -51,30 +56,6 @@ const COLUMNS: readonly ClientColumn[] = [
     tag: (client) => (client.active ? 'success' : 'secondary'),
   },
 ];
-
-/** Desactivar no borra: el cliente sigue en la lista (como inactivo) porque tiene historia operativa. */
-const STATUS_ACTIONS = {
-  deactivate: {
-    verb: 'Desactivar',
-    icon: PowerOff,
-    message: (name: string) =>
-      `${name} seguirá en la lista, marcado como inactivo. Puedes reactivarlo cuando quieras.`,
-    severity: 'danger',
-    done: 'Cliente desactivado',
-    failed: 'No se pudo desactivar el cliente',
-  },
-  reactivate: {
-    verb: 'Reactivar',
-    icon: Power,
-    message: (name: string) => `${name} volverá a estar activo.`,
-    severity: undefined,
-    done: 'Cliente reactivado',
-    failed: 'No se pudo reactivar el cliente',
-  },
-} as const;
-type StatusAction = (typeof STATUS_ACTIONS)[keyof typeof STATUS_ACTIONS];
-const statusActionFor = (client: Client): StatusAction =>
-  STATUS_ACTIONS[client.active ? 'deactivate' : 'reactivate'];
 
 const toast = useToast();
 const confirm = useConfirm();

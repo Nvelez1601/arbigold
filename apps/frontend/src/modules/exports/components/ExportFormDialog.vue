@@ -33,10 +33,7 @@ const SETTLEMENT_MODE_LABELS: Record<SettlementMode, string> = {
 
 const today = new Date().toLocaleDateString('en-CA');
 const { form, errors, isDirty, isThirdParty, selectSupplier, validate, firstError } = useExportForm(
-  {
-    today,
-    suppliers: () => props.suppliers,
-  },
+  { today, suppliers: () => props.suppliers },
 );
 const isCobroTotal = computed(() => isThirdParty.value && form.settlementMode === 'COBRO_TOTAL');
 

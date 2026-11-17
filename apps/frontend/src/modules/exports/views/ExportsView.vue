@@ -25,6 +25,7 @@ import {
   EXPORT_STATUS_LABELS,
   EXPORT_STATUS_SEVERITY,
   type ExportRow,
+  validExportStatusFilter,
   advanceExport,
   describeAdvance,
   describeSaveFailure,
@@ -69,10 +70,7 @@ const isLoading = computed(() => queries.some((query) => query.isPending.value))
 const hasError = computed(() => queries.some((query) => query.isError.value));
 const retry = () => queries.forEach((query) => void query.refetch());
 
-const statusFilter = computed(() => {
-  const value = route.query['estado'];
-  return typeof value === 'string' && Object.hasOwn(EXPORT_STATUS_LABELS, value) ? value : '';
-});
+const statusFilter = computed(() => validExportStatusFilter(route.query['estado']));
 const setStatusFilter = (value: string | null) =>
   router.replace({ query: value?.trim() ? { estado: value.trim() } : {} });
 
@@ -92,12 +90,9 @@ const openDialog = () => {
   isDialogOpen.value = true;
 };
 
+const REFRESH_KEYS = [QUERY_KEYS.exports, QUERY_KEYS.packingLists] as const;
 const refresh = () =>
-  Promise.all(
-    [QUERY_KEYS.exports, QUERY_KEYS.packingLists].map((queryKey) =>
-      queryClient.invalidateQueries({ queryKey }),
-    ),
-  );
+  Promise.all(REFRESH_KEYS.map((queryKey) => queryClient.invalidateQueries({ queryKey })));
 
 const saveExport = async (input: ExportInput) => {
   isSaving.value = true;

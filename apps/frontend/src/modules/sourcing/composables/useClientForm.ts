@@ -1,6 +1,7 @@
 import { type Client, clientInputSchema } from '@arbigold/shared-types';
 import { type Ref, computed, reactive, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { Power, PowerOff } from 'lucide-vue-next';
 
 /** Orden en que aparecen los campos en el formulario: el foco va al primero con error. */
 export const CLIENT_FIELDS = [
@@ -113,3 +114,27 @@ export const useClientSearch = (clients: Ref<readonly Client[]>) => {
   );
   return { search, results };
 };
+
+/** Desactivar no borra: el cliente sigue en la lista (como inactivo) porque tiene historia operativa. */
+export const STATUS_ACTIONS = {
+  deactivate: {
+    verb: 'Desactivar',
+    icon: PowerOff,
+    message: (name: string) =>
+      `${name} seguirá en la lista, marcado como inactivo. Puedes reactivarlo cuando quieras.`,
+    severity: 'danger',
+    done: 'Cliente desactivado',
+    failed: 'No se pudo desactivar el cliente',
+  },
+  reactivate: {
+    verb: 'Reactivar',
+    icon: Power,
+    message: (name: string) => `${name} volverá a estar activo.`,
+    severity: undefined,
+    done: 'Cliente reactivado',
+    failed: 'No se pudo reactivar el cliente',
+  },
+} as const;
+export type StatusAction = (typeof STATUS_ACTIONS)[keyof typeof STATUS_ACTIONS];
+export const statusActionFor = (client: Client): StatusAction =>
+  STATUS_ACTIONS[client.active ? 'deactivate' : 'reactivate'];

@@ -16,6 +16,7 @@ import {
   toExportRows,
   toPackingListOptions,
   useExportForm,
+  validExportStatusFilter,
   validateExportForm,
 } from './useExportForm.ts';
 
@@ -127,6 +128,16 @@ describe('packing lists exportables', () => {
     expect(option?.fine.toString()).toBe('10000');
     const [orphan] = toPackingListOptions([aPackingList()], []);
     expect(orphan?.clientName).toBe('Cliente sin registrar');
+  });
+});
+
+describe('query ?estado=', () => {
+  it('solo un estado conocido filtra la tabla; cualquier otra cosa no filtra', () => {
+    expect(validExportStatusFilter('ENVIADA')).toBe('ENVIADA');
+    expect(validExportStatusFilter('PREPARACION')).toBe('PREPARACION');
+    expect(validExportStatusFilter('no-se-que')).toBe('');
+    expect(validExportStatusFilter(['ENVIADA'])).toBe('');
+    expect(validExportStatusFilter(undefined)).toBe('');
   });
 });
 
