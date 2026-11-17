@@ -6,6 +6,9 @@
  * Guía de uso y contrastes: docs/design/paleta.md
  */
 @theme {
+  /* Tipografía: IBM Plex Sans (local, sin CDN externo), con cifras tabulares para gramos. */
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+
   /* Marca */
   --color-brand-space-indigo: #21295c;
   --color-brand-regal-navy: #1b3b6f;
@@ -72,7 +75,13 @@
     color-scheme: light;
   }
 
+  html {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
   body {
+    font-family: var(--font-sans);
     background-color: var(--color-background);
     color: var(--color-text);
     font-feature-settings: 'tnum'; /* cifras tabulares: los gramos se alinean en las tablas */
@@ -82,5 +91,15 @@
   h2,
   h3 {
     color: var(--color-heading);
+    text-wrap: balance;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }
