@@ -69,13 +69,15 @@ npm run db:push                        # aplica las migraciones pendientes al pr
 
 ### Problemas frecuentes
 
-| Síntoma                                                      | Causa y solución                                                                                                |
-| ------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
-| `Configuración inválida: DATABASE_URL, …` al arrancar la API | Falta `apps/backend/.env` o una variable (el mensaje nombra cuáles). `DATABASE_URL` vacía: pégala desde Connect |
-| `Configuración inválida: SUPABASE_PUBLISHABLE_KEY`           | Pegaste una `sb_secret_…`: ahí va la `sb_publishable_…`                                                         |
-| `self-signed certificate` / `SSL required`                   | `DATABASE_SSL=true` (Supabase en la nube siempre usa TLS)                                                       |
-| El proyecto no responde tras unos días sin uso               | El plan Free pausa los proyectos inactivos: reanúdalo desde el panel                                            |
-| `✗ Los hooks requieren Node 26` al commitear                 | Falta Node 26 en nvm: `nvm install 26`                                                                          |
+| Síntoma                                                      | Causa y solución                                                                                                                                                                                                                                         |
+| ------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Configuración inválida: DATABASE_URL, …` al arrancar la API | Falta `apps/backend/.env` o una variable (el mensaje nombra cuáles). `DATABASE_URL` vacía: pégala desde Connect                                                                                                                                          |
+| `Configuración inválida: SUPABASE_PUBLISHABLE_KEY`           | Pegaste una `sb_secret_…`: ahí va la `sb_publishable_…`                                                                                                                                                                                                  |
+| `ENETUNREACH … :5432` (dirección IPv6)                       | Usaste la conexión **directa** (`db.<ref>.supabase.co:5432`), que es solo IPv6 y no funciona desde WSL ni desde muchas redes. Usa el **Transaction pooler**: `postgresql://postgres.<ref>:<password>@aws-<n>-<region>.pooler.supabase.com:6543/postgres` |
+| `tenant/user postgres.<ref> not found`                       | El host del pooler no corresponde a tu proyecto (hay `aws-0-…` y `aws-1-…`): copia el host exacto de Connect → Transaction pooler                                                                                                                        |
+| `self-signed certificate` / `SSL required`                   | `DATABASE_SSL=true` (Supabase en la nube siempre usa TLS)                                                                                                                                                                                                |
+| El proyecto no responde tras unos días sin uso               | El plan Free pausa los proyectos inactivos: reanúdalo desde el panel                                                                                                                                                                                     |
+| `✗ Los hooks requieren Node 26` al commitear                 | Falta Node 26 en nvm: `nvm install 26`                                                                                                                                                                                                                   |
 
 ---
 
