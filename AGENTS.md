@@ -63,6 +63,9 @@ Un solo desarrollador: se commitea directo en `main` (ver `memory/decision_logs/
 
 Las skills de terceros están fijadas en `skills-lock.json`: no se editan a mano. Las `arbigold-*` son propias y se cambian como cualquier archivo del repo.
 
-## Memoria
+## Memoria y continuidad (obligatorio)
 
-Al iniciar una tarea, lee `memory/active_context.md` (si existe), los ADRs relevantes y el estado de reviews (`bash .agents/skills/arbigold-orquestador-reviews/scripts/review.sh estado`). Las decisiones de arquitectura nuevas van como `memory/decision_logs/ADR-NNN-<tema>.md`; los planes, en `memory/plans/`.
+1. **Al iniciar:** lee `memory/active_context.md` (estado vivo: qué se hace, cómo va, qué sigue), los ADRs relevantes y el estado de reviews (`bash .agents/skills/arbigold-orquestador-reviews/scripts/review.sh estado`).
+2. **Al cerrar cada hito** (una pantalla integrada, una migración, un push, una decisión del negocio): actualiza `memory/active_context.md` en el mismo commit o en el siguiente. Otro agente, otro LLM u otra sesión debe poder retomar **solo con el repo**, sin la conversación.
+3. Decisiones de arquitectura → `memory/decision_logs/ADR-NNN-<tema>.md`. Planes → `memory/plans/`. Informes de review → `memory/reviews/`.
+4. Si hay una orquestación en curso, `active_context.md` dice dónde viven el plan (`~/.config/arbigold/orquestador/…`) y los worktrees (`~/.cache/arbigold/minions/…`), y qué falta por tarea.
