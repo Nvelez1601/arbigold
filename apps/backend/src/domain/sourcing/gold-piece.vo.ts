@@ -1,3 +1,4 @@
+import type { Decimal } from 'decimal.js';
 import { ValidationError } from '../shared/domain-error.ts';
 import type { Fineness } from '../shared/fineness.vo.ts';
 import type { GoldWeight } from '../shared/gold-weight.vo.ts';
@@ -11,6 +12,12 @@ export interface GoldPieceProps {
   readonly fineness: Fineness;
 }
 
+/**
+ * Decimales máximos de una MEDIDA (peso bruto y ley en ‰): en Venezuela se registran 2 y las
+ * refinerías reportan de 1 a 3. Los valores calculados (fino, diferencias) no se truncan.
+ */
+export const MAX_MEASUREMENT_DECIMALS = 3;
+
 /** Una pieza física de oro. Su valor real es el peso fino = bruto × ley / 1000. */
 export class GoldPiece {
   readonly fineWeight: GoldWeight;
@@ -20,16 +27,14 @@ export class GoldPiece {
   }
 
   static create(props: GoldPieceProps): GoldPiece {
-    if (!Number.isInteger(props.number) || props.number < 1) {
-      throw new ValidationError('INVALID_PIECE_NUMBER', 'El número de pieza es un entero desde 1', {
-        number: props.number,
-      });
-    }
+    assertPieceNumber(props.number);
     if (props.grossWeight.grams.isZero()) {
       throw new ValidationError('EMPTY_PIECE', 'Una pieza debe pesar más de 0 gramos', {
         number: props.number,
       });
     }
+    assertMeasurement(props.grossWeight.grams, 'El peso bruto', props.number);
+    assertMeasurement(props.fineness.perMille, 'La ley', props.number);
     return new GoldPiece(props);
   }
 
@@ -45,3 +50,19 @@ export class GoldPiece {
     return this.props.fineness;
   }
 }
+
+const assertPieceNumber = (number: number): void => {
+  if (Number.isInteger(number) && number >= 1) return;
+  throw new ValidationError('INVALID_PIECE_NUMBER', 'El número de pieza es un entero desde 1', {
+    number,
+  });
+};
+
+const assertMeasurement = (value: Decimal, field: string, number: number): void => {
+  if (value.decimalPlaces() <= MAX_MEASUREMENT_DECIMALS) return;
+  throw new ValidationError(
+    'TOO_MANY_DECIMALS',
+    `${field} de la pieza ${number} admite hasta ${MAX_MEASUREMENT_DECIMALS} decimales`,
+    { number, field, value: value.toString() },
+  );
+};
