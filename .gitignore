@@ -41,7 +41,7 @@ backups/
 !.agents/skills/**/*.csv
 
 # ---------- Node / TypeScript ----------
-node_modules/
+node_modules
 .pnpm-store/
 .npm/
 .yarn/*

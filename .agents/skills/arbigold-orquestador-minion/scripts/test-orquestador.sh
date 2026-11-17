@@ -94,8 +94,13 @@ fi
 (cd "$BASE_WT" && bash "$RAIZ/scripts/minion-worktree.sh" limpiar d >/dev/null)
 
 # El caso normal (node_modules como directorio real) sigue enlazando.
+# Regresión ArbiGold: con "node_modules" (sin barra) en .gitignore, el symlink que crea
+# minion-worktree.sh NO aparece como cambio del minion (antes violaba el scope).
+printf 'node_modules\n' > "$REPO/.gitignore"
+git -C "$REPO" add .gitignore && git -C "$REPO" commit -qm ignore
 bash "$RAIZ/scripts/minion-worktree.sh" crear e "$REPO" >/dev/null
 WT_E="$CACHE_MINIONS/$(basename "$REPO")-e"
+git -C "$WT_E" status --porcelain | grep -q node_modules && { echo "ERROR: el symlink de node_modules aparece como cambio del minion" >&2; exit 1; }
 if [ ! -f "$WT_E/node_modules/paquete/index.js" ]; then
   echo "ERROR: el minion quedó sin node_modules (padre con directorio real)" >&2
   exit 1
