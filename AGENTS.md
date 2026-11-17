@@ -58,6 +58,7 @@ Un solo desarrollador: se commitea directo en `main` (ver `memory/decision_logs/
 | `security-audit`                                | Preguntas de seguridad, revisión focalizada o auditoría completa (source-first)                                                                                                               |
 | `qa-security-review` / `security-audit-generic` | Barrido QA + SAST del repo, con un reporte por hallazgo y su rama de fix                                                                                                                      |
 | `frontend-design`                               | Dirección visual de pantallas y componentes                                                                                                                                                   |
+| `web-design-guidelines`                         | Revisar UI contra las Web Interface Guidelines. **Usa la copia fijada `docs/design/web-interface-guidelines.md`** (no descargues las reglas en cada uso)                                      |
 | `ui-ux-pro-max`                                 | Paletas, tipografía, accesibilidad y patrones de UI. Sus scripts se corren como `python3 .agents/skills/ui-ux-pro-max/scripts/search.py ...` (en este repo no existe `${CLAUDE_PLUGIN_ROOT}`) |
 
 Las skills de terceros están fijadas en `skills-lock.json`: no se editan a mano. Las `arbigold-*` son propias y se cambian como cualquier archivo del repo.
