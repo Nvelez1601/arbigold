@@ -42,7 +42,9 @@ export const closedGrams = (
   const money = toDecimalOrNull(amount);
   const price = toDecimalOrNull(pricePerOunce);
   const pct = toDecimalOrNull(percentage);
-  if (!money || !price || !pct || price.isZero() || pct.isZero()) return null;
+  if (!money || !price || !pct) return null;
+  if (!money.greaterThan(0) || !price.greaterThan(0)) return null;
+  if (!pct.greaterThan(0) || pct.greaterThan(HUNDRED)) return null;
   return money.dividedBy(price.dividedBy(TROY_OUNCE_IN_GRAMS).times(pct).dividedBy(HUNDRED));
 };
 

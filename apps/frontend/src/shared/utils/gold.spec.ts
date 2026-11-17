@@ -31,6 +31,13 @@ describe('vista previa de oro (réplica del dominio)', () => {
     expect(closedGrams('100000', '4000', '95')?.toDecimalPlaces(4).toString()).toBe('818.5132');
     expect(closedGrams('100000', '0', '95')).toBeNull();
     expect(closedGrams('100000', '4000', '')).toBeNull();
+    expect(closedGrams('0', '4000', '95')).toBeNull();
+    expect(closedGrams('-100', '4000', '95')).toBeNull();
+  });
+
+  it('rechaza un % fuera del rango 0 – 100', () => {
+    expect(closedGrams('100000', '4000', '150')).toBeNull();
+    expect(closedGrams('100000', '4000', '0')).toBeNull();
   });
 
   it('suma ignorando los valores incompletos', () => {
