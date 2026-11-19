@@ -21,6 +21,10 @@ const asNumeric = (value: NumericInput) => value as unknown as number;
 
 export const formatGrams = (value: NumericInput): string => `${GRAMS.format(asNumeric(value))} g`;
 
+/** Gramos de un cálculo que puede faltar (datos incompletos): guion en lugar de "NaN g". */
+export const formatGramsOrDash = (value: { toString(): string } | null | undefined): string =>
+  value ? formatGrams(value.toString()) : '—';
+
 export const formatPerMille = (value: NumericInput): string =>
   `${PER_MILLE.format(asNumeric(value))} ‰`;
 

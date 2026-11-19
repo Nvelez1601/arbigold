@@ -6,12 +6,21 @@ defineProps<{ title: string; description: string; icon?: Component }>();
 
 <template>
   <section
-    class="flex flex-col items-center rounded-lg border border-dashed border-border bg-surface-0 px-6 py-12 text-center"
+    class="relative overflow-hidden rounded-2xl border border-border bg-surface-0 px-6 py-14 text-center"
   >
-    <component :is="icon" v-if="icon" class="mb-3 size-8 text-primary-500" aria-hidden="true" />
-    <h2 class="text-lg font-semibold text-heading">{{ title }}</h2>
-    <p class="mt-1 max-w-md text-sm text-pretty text-muted">{{ description }}</p>
-    <div v-if="$slots.default" class="mt-5">
+    <div
+      class="pointer-events-none absolute inset-x-0 top-0 h-28 bg-brand-gradient opacity-[0.05]"
+      aria-hidden="true"
+    />
+    <div
+      v-if="icon"
+      class="mx-auto mb-4 grid size-12 place-items-center rounded-2xl bg-primary-50 text-primary-600"
+    >
+      <component :is="icon" class="size-6" aria-hidden="true" />
+    </div>
+    <h2 class="font-display text-lg font-semibold text-heading">{{ title }}</h2>
+    <p class="mx-auto mt-1.5 max-w-md text-sm text-pretty text-muted">{{ description }}</p>
+    <div v-if="$slots.default" class="mt-6 flex justify-center">
       <slot />
     </div>
   </section>
