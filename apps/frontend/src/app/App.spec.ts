@@ -11,7 +11,7 @@ describe('App', () => {
 
   it('marca la sección activa en la navegación', async () => {
     const { wrapper } = await mountWithApp(App, { route: '/clientes' });
-    const active = wrapper.get('nav a.bg-primary-700');
+    const active = wrapper.get('nav a.text-primary-700\\!');
     expect(active.text()).toBe('Clientes');
   });
 });
