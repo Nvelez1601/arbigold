@@ -4,6 +4,7 @@ import ConfirmDialog from 'primevue/confirmdialog';
 import Toast from 'primevue/toast';
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { defineComponent, h } from 'vue';
+import { pickOption } from '../../../../test/support/select.ts';
 import { mountWithApp } from '../../../../test/support/mount.ts';
 import {
   clientsRepository,
@@ -25,9 +26,11 @@ const render = async () => {
   return wrapper;
 };
 const bodyText = () => document.body.textContent ?? '';
+/** Un botón por su nombre accesible: aria-label (acciones de fila con ícono) o su texto. */
 const buttonByText = (label: string) => {
   const button = [...document.querySelectorAll<HTMLButtonElement>('button')].find(
-    (candidate) => candidate.textContent?.trim() === label,
+    (candidate) =>
+      (candidate.getAttribute('aria-label') ?? candidate.textContent?.trim()) === label,
   );
   if (!button) throw new Error(`No hay botón "${label}"`);
   return button;
@@ -171,10 +174,7 @@ describe('OperationsView', { timeout: 20_000 }, () => {
     const choose = async (id: string, label: string) => {
       if (!document.querySelector('[role="option"]')) await field(id).trigger('click');
       await flushPromises();
-      [...document.querySelectorAll<HTMLElement>('[role="option"]')]
-        .find((option) => option.textContent?.trim() === label)
-        ?.click();
-      await flushPromises();
+      await pickOption(label);
     };
     await choose('supplierId', 'Proveedor Ficticio');
     await choose('clientId', 'Cliente Ficticio');
@@ -201,7 +201,7 @@ describe('OperationsView', { timeout: 20_000 }, () => {
     const parties = await seedParties();
     await operationsRepository.create(closure(parties));
     const wrapper = await render();
-    await click('Marcar como cumplida');
+    await click('Marcar como cumplida la operación de Cliente Ficticio');
     expect(bodyText()).toContain('queda cumplida y deja de sumar en los gramos abiertos');
     expect((await operationsRepository.list())[0]?.status).toBe('ABIERTA');
     const confirmButtons = [...document.querySelectorAll<HTMLButtonElement>('button')].filter(
@@ -219,10 +219,10 @@ describe('OperationsView', { timeout: 20_000 }, () => {
     const parties = await seedParties();
     await operationsRepository.create(closure(parties));
     const wrapper = await render();
-    await click('Cancelar');
+    await click('Cancelar la operación de Cliente Ficticio');
     await click('Volver');
     expect((await operationsRepository.list())[0]?.status).toBe('ABIERTA');
-    await click('Cancelar');
+    await click('Cancelar la operación de Cliente Ficticio');
     await click('Cancelar operación');
     expect((await operationsRepository.list())[0]?.status).toBe('CANCELADA');
     expect(bodyText()).toContain('Operación cancelada');
@@ -234,7 +234,7 @@ describe('OperationsView', { timeout: 20_000 }, () => {
     await operationsRepository.create(closure(parties));
     vi.spyOn(operationsRepository, 'update').mockRejectedValueOnce(new Error('sin conexión'));
     await render();
-    await click('Cancelar');
+    await click('Cancelar la operación de Cliente Ficticio');
     await click('Cancelar operación');
     expect(bodyText()).toContain('No se pudo cambiar el estado');
     expect((await operationsRepository.list())[0]?.status).toBe('ABIERTA');
@@ -249,7 +249,7 @@ describe('OperationsView', { timeout: 20_000 }, () => {
     expect(row.classes()).toEqual(expect.arrayContaining(['bg-surface-50!', 'text-muted']));
     expect(row.html()).not.toMatch(/opacity-/);
     expect(row.text()).toContain('Cancelada');
-    expect(row.text()).not.toContain('Marcar como cumplida');
+    expect(row.find('button').exists()).toBe(false);
     expect(wrapper.text()).toContain('Abiertas (0)');
   });
 });

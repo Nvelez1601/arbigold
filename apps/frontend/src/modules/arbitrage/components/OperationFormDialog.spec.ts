@@ -5,6 +5,7 @@ import ConfirmDialog from 'primevue/confirmdialog';
 import { defineComponent, h } from 'vue';
 import { mountWithApp } from '../../../../test/support/mount.ts';
 import OperationFormDialog from './OperationFormDialog.vue';
+import { pickOption } from '../../../../test/support/select.ts';
 
 /** Datos ficticios: ni nombres ni montos reales. */
 const SUPPLIERS: Supplier[] = [
@@ -60,11 +61,7 @@ const openOptions = async (fieldId: string) => {
 };
 const chooseOption = async (fieldId: string, label: string) => {
   await openOptions(fieldId);
-  const option = [...document.querySelectorAll<HTMLElement>('[role="option"]')].find(
-    (candidate) => candidate.textContent?.trim() === label,
-  );
-  option?.click();
-  await flushPromises();
+  await pickOption(label);
 };
 
 /** El diálogo junto al ConfirmDialog que App monta, para ver la confirmación de descartar. */
@@ -194,11 +191,7 @@ describe('OperationFormDialog', { timeout: 20_000 }, () => {
     await field('internationalPricePerOunce').setValue('4100');
     await field('clientPercentage').setValue('95.5');
     await field('supplierPercentage').setValue('96.75');
-    await openOptions('currency');
-    [...document.querySelectorAll<HTMLElement>('[role="option"]')]
-      .find((option) => option.textContent?.trim() === 'USD')
-      ?.click();
-    await flushPromises();
+    await chooseOption('currency', 'USD');
     document.querySelector<HTMLButtonElement>('button[type="submit"]')?.click();
     await flushPromises();
     expect(wrapper.emitted('submit')?.[0]?.[0]).toMatchObject({

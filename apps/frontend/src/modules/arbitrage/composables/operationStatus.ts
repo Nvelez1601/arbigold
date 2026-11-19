@@ -1,5 +1,6 @@
 import type { Operation } from '@arbigold/shared-types';
-import { formatMoney } from '../../../shared/utils/format.ts';
+import { CircleCheck, CircleX } from 'lucide-vue-next';
+import { formatMoney, formatPercent } from '../../../shared/utils/format.ts';
 
 export type StatusChange = Extract<Operation['status'], 'CUMPLIDA' | 'CANCELADA'>;
 
@@ -30,3 +31,33 @@ export const statusChangeMessage = (
   status: StatusChange,
 ) =>
   `La operación de ${row.clientName} por ${formatMoney(row.amount, row.currency)} ${STATUS_CHANGES[status].consequence}. No se puede deshacer.`;
+
+/** Acciones de una operación ABIERTA en su fila: mapa declarativo (sin botones repetidos). */
+export const OPERATION_ROW_ACTIONS = [
+  { status: 'CUMPLIDA', verb: 'Marcar como cumplida', icon: CircleCheck, severity: 'success' },
+  { status: 'CANCELADA', verb: 'Cancelar', icon: CircleX, severity: 'danger' },
+] as const satisfies readonly {
+  status: StatusChange;
+  verb: string;
+  icon: unknown;
+  severity: string;
+}[];
+
+/** Columnas numéricas simples de la tabla de operaciones (encabezado corto + valor formateado). */
+export const OPERATION_AMOUNT_COLUMNS: readonly {
+  header: string;
+  value: (operation: Operation) => string;
+  /** Dato secundario bajo el valor (p. ej. el precio al que se cerró el monto). */
+  detail?: (operation: Operation) => string;
+}[] = [
+  {
+    header: 'Monto',
+    value: (op) => formatMoney(op.amount, op.currency),
+    detail: (op) => `a ${formatMoney(op.internationalPricePerOunce, 'USD')}/oz`,
+  },
+  {
+    header: '% cli. / prov.',
+    value: (op) =>
+      `${formatPercent(op.clientPercentage)} / ${formatPercent(op.supplierPercentage)}`,
+  },
+];

@@ -156,6 +156,15 @@ export interface OperationFigures {
   readonly margin: Decimal | null;
 }
 
+/** Fila de la tabla de operaciones: la operación con los nombres de sus partes y sus cifras. */
+export type OperationRow = Operation & {
+  readonly clientName: string;
+  readonly supplierName: string;
+  readonly figures: OperationFigures;
+};
+
+export type OperationTotals = ReturnType<typeof openOperationsTotals>;
+
 export const operationFigures = (operation: Operation): OperationFigures => {
   const { clientGrams, supplierGrams, margin } = closurePreview(operation);
   return { clientGrams, supplierGrams, margin };
