@@ -94,6 +94,7 @@ htmlcov/
 junit*.xml
 test-results/
 playwright-report/
+apps/frontend/e2e/screenshots/
 
 # ---------- Logs ----------
 logs/
