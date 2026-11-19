@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FileQuestion, Plus, Trash2 } from 'lucide-vue-next';
+import { FileQuestion, Plus } from 'lucide-vue-next';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
 import Select from 'primevue/select';
@@ -11,17 +11,12 @@ import { computed, ref, toRef } from 'vue';
 import { onBeforeRouteLeave, useRouter } from 'vue-router';
 import EmptyState from '../../../shared/components/EmptyState.vue';
 import PageHeader from '../../../shared/components/PageHeader.vue';
-import { formatDate, formatGrams, formatPerMille } from '../../../shared/utils/format.ts';
-import { toPerMille } from '../../../shared/utils/gold.ts';
+import { formatDate } from '../../../shared/utils/format.ts';
 import PieceRowsEditor from '../components/PieceRowsEditor.vue';
 import ResidueDialog from '../components/ResidueDialog.vue';
+import ResidueList from '../components/ResidueList.vue';
 import ScaleSummaryBar from '../components/ScaleSummaryBar.vue';
-import {
-  RESIDUE_LABELS,
-  STATUS_TAGS,
-  describePieces,
-  usePackingListEditor,
-} from '../composables/usePackingListEditor.ts';
+import { STATUS_TAGS, usePackingListEditor } from '../composables/usePackingListEditor.ts';
 
 const props = defineProps<{ id?: string }>();
 const {
@@ -55,7 +50,6 @@ const isResidueDialogOpen = ref(false);
 const title = computed(() =>
   record.value ? `Packing list del ${formatDate(record.value.issuedOn)}` : 'Nuevo packing list',
 );
-const perMilleText = (fineness: string) => formatPerMille(toPerMille(fineness)?.toString() ?? '0');
 const removeResidue = (key: string) => {
   residues.value = residues.value.filter((residue) => residue.key !== key);
 };
@@ -149,7 +143,10 @@ onBeforeRouteLeave(() => !isDirty.value || askToLeave());
       </template>
     </PageHeader>
 
-    <section aria-label="Datos del packing list" class="grid gap-4 sm:grid-cols-[2fr_1fr]">
+    <section
+      aria-label="Datos del packing list"
+      class="grid gap-4 rounded-2xl border border-border bg-surface-0 p-5 sm:grid-cols-[2fr_1fr]"
+    >
       <div class="flex flex-col gap-1.5">
         <span id="pl-client" class="text-sm font-medium text-heading">Cliente</span>
         <Select
@@ -188,65 +185,40 @@ onBeforeRouteLeave(() => !isDirty.value || askToLeave());
       </label>
     </section>
 
-    <section aria-labelledby="pl-pieces" class="mt-8">
-      <h2 id="pl-pieces" class="mb-3 text-lg font-semibold text-heading">Piezas</h2>
+    <section
+      aria-labelledby="pl-pieces"
+      class="mt-6 rounded-2xl border border-border bg-surface-0 p-5"
+    >
+      <h2 id="pl-pieces" class="font-display mb-3 text-lg font-semibold text-heading">Piezas</h2>
       <PieceRowsEditor v-model="pieces" :errors="pieceErrors" :readonly="!isEditable" />
     </section>
 
-    <section aria-labelledby="pl-residues" class="mt-8">
+    <section
+      aria-labelledby="pl-residues"
+      class="mt-6 rounded-2xl border border-border bg-surface-0 p-5"
+    >
       <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <h2 id="pl-residues" class="text-lg font-semibold text-heading">Viruta y fundición</h2>
+        <h2 id="pl-residues" class="font-display text-lg font-semibold text-heading">
+          Viruta y fundición
+        </h2>
         <Button v-if="isEditable" severity="secondary" outlined @click="isResidueDialogOpen = true">
           <Plus class="size-4" aria-hidden="true" />
           Registrar viruta o fundición
         </Button>
       </div>
-      <ul
-        v-if="residues.length > 0"
-        class="divide-y divide-surface-200 rounded-lg border border-border bg-surface-0"
-      >
-        <li
-          v-for="residue in residues"
-          :key="residue.key"
-          class="flex items-start justify-between gap-4 px-4 py-3"
-        >
-          <div class="min-w-0">
-            <p class="font-medium text-heading">
-              {{ RESIDUE_LABELS[residue.kind] }} de {{ describePieces(residue.fromPieces) }}
-            </p>
-            <p v-if="residue.note" class="text-sm wrap-anywhere text-muted">{{ residue.note }}</p>
-            <p v-if="orphanResidues.includes(residue)" class="text-xs text-danger">
-              Alguna pieza de origen ya no existe: quita este registro y vuelve a cargarlo.
-            </p>
-          </div>
-          <div class="ml-auto text-right whitespace-nowrap tabular-nums">
-            <p class="text-heading">{{ formatGrams(residue.grossWeight) }}</p>
-            <p v-if="residue.fineness" class="text-sm text-muted">
-              {{ perMilleText(residue.fineness) }}
-            </p>
-          </div>
-          <Button
-            v-if="isEditable"
-            text
-            rounded
-            severity="secondary"
-            :aria-label="`Quitar ${RESIDUE_LABELS[residue.kind].toLowerCase()} de ${describePieces(residue.fromPieces)}`"
-            @click="removeResidue(residue.key)"
-          >
-            <Trash2 class="size-4" aria-hidden="true" />
-          </Button>
-        </li>
-      </ul>
-      <p v-else class="text-sm text-muted">Sin viruta ni fundición registradas.</p>
-      <p class="mt-2 text-sm text-muted">
-        No suman al conteo ni a los totales: salen de las mismas piezas.
-      </p>
+      <ResidueList
+        :residues="residues"
+        :readonly="!isEditable"
+        :orphan-residues="orphanResidues"
+        @remove="removeResidue"
+      />
     </section>
 
     <ScaleSummaryBar :count="totals.count" :gross="totals.gross" :fine="totals.fine">
       <Button
         v-if="isEditable"
         label="Guardar borrador"
+        class="border-0! bg-surface-0! text-primary-700! hover:bg-surface-50!"
         :loading="isBusy"
         :disabled="isBusy"
         @click="run(saveDraft, 'Borrador guardado')"

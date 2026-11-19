@@ -67,12 +67,12 @@ const onEnter = (index: number) => {
 
 <template>
   <div>
-    <div ref="table" class="overflow-x-auto rounded-lg border border-border bg-surface-0">
+    <div ref="table" class="overflow-x-auto rounded-2xl border border-border bg-surface-0">
       <table class="w-full min-w-[40rem] text-sm">
         <caption class="sr-only">
           Piezas del packing list
         </caption>
-        <thead class="bg-surface-100 text-left text-muted">
+        <thead class="bg-surface-50 text-left text-[11px] tracking-[0.07em] text-muted uppercase">
           <tr>
             <th scope="col" class="w-20 px-3 py-2 text-center font-medium">N.º</th>
             <th scope="col" class="px-3 py-2 text-right font-medium">Peso bruto (g)</th>
@@ -116,7 +116,7 @@ const onEnter = (index: number) => {
               <span
                 v-if="perMille(row)"
                 data-hallmark
-                class="inline-flex h-9 items-center rounded-[4px] border-[1.5px] border-brand-dusty-lavender px-2 font-semibold whitespace-nowrap text-brand-dusty-lavender tabular-nums shadow-[inset_0_0_0_2px_#fff,inset_0_0_0_3px_rgb(128_109_145/0.35)]"
+                class="inline-flex h-9 items-center rounded-[4px] border-[1.5px] border-brand-iris px-2 font-semibold whitespace-nowrap text-brand-iris tabular-nums shadow-[inset_0_0_0_2px_#fff,inset_0_0_0_3px_rgb(107_74_158/0.35)]"
               >
                 {{ formatPerMille(perMille(row)?.toString() ?? '0') }}
               </span>

@@ -15,10 +15,12 @@ import {
   useCollectionMutations,
 } from '../../../shared/composables/useCollection.ts';
 import EmptyState from '../../../shared/components/EmptyState.vue';
+import MetricStrip from '../../../shared/components/MetricStrip.vue';
 import PageHeader from '../../../shared/components/PageHeader.vue';
 import { QUERY_KEYS, clientsRepository } from '../../../shared/data/repositories.ts';
 import { formatPercent } from '../../../shared/utils/format.ts';
 import ClientFormDialog from '../components/ClientFormDialog.vue';
+import { clientMetrics } from '../composables/clientMetrics.ts';
 import {
   type ValidClientInput,
   type StatusAction,
@@ -46,7 +48,7 @@ const COLUMNS: readonly ClientColumn[] = [
   { header: 'Ubicación', value: (client) => client.location },
   { header: 'Teléfono', value: (client) => client.phone },
   {
-    header: '% habitual de compra',
+    header: '% compra',
     value: ({ defaultPercentage }) => defaultPercentage && formatPercent(defaultPercentage),
     isNumeric: true,
   },
@@ -65,6 +67,8 @@ const { create, update } = useCollectionMutations(QUERY_KEYS.clients, clientsRep
 const byName = (a: Client, b: Client) => a.name.localeCompare(b.name, 'es');
 const allClients = computed(() => [...(data.value ?? [])].sort(byName));
 const { search, results: visibleClients } = useClientSearch(allClients);
+
+const metrics = computed(() => clientMetrics(allClients.value));
 
 const isDialogVisible = ref(false);
 const editingClient = ref<Client | null>(null);
@@ -123,7 +127,7 @@ const askStatusChange = (client: Client) => {
   >
     <template #actions>
       <Button label="Nuevo cliente" @click="openDialog(null)">
-        <template #icon><UserPlus class="size-4" aria-hidden="true" /></template>
+        <template #icon><UserPlus class="size-4 shrink-0" aria-hidden="true" /></template>
       </Button>
     </template>
   </PageHeader>
@@ -145,6 +149,7 @@ const askStatusChange = (client: Client) => {
 
   <section v-else aria-labelledby="clients-list-title" class="flex flex-col gap-4">
     <h2 id="clients-list-title" class="sr-only">Lista de clientes</h2>
+    <MetricStrip :metrics="metrics" />
     <div class="flex flex-wrap items-end justify-between gap-3">
       <div class="flex w-full max-w-sm flex-col gap-1.5">
         <label for="clients-search" class="text-sm font-medium text-heading">
@@ -163,7 +168,7 @@ const askStatusChange = (client: Client) => {
             autocomplete="off"
             spellcheck="false"
             placeholder="Nombre, cédula o RIF…"
-            class="w-full pl-9"
+            class="w-full pl-10!"
           />
         </div>
       </div>
@@ -181,13 +186,12 @@ const askStatusChange = (client: Client) => {
       <Button label="Limpiar búsqueda" severity="secondary" outlined @click="search = ''" />
     </EmptyState>
 
-    <div v-else class="overflow-x-auto rounded-lg border border-border bg-surface-0">
+    <div v-else class="overflow-x-auto rounded-2xl border border-border bg-surface-0">
       <DataTable
         :value="visibleClients"
         data-key="id"
         size="small"
         :row-class="(client: Client) => (client.active ? '' : 'bg-surface-50!')"
-        table-class="min-w-[60rem]"
       >
         <template #header><span class="sr-only">Clientes registrados</span></template>
         <Column
@@ -215,23 +219,29 @@ const askStatusChange = (client: Client) => {
             <div class="flex justify-end gap-1">
               <Button
                 text
+                rounded
                 size="small"
-                label="Editar"
                 :aria-label="`Editar ${client.name}`"
+                :title="`Editar ${client.name}`"
                 @click="openDialog(client)"
               >
-                <template #icon><Pencil class="size-4" aria-hidden="true" /></template>
+                <template #icon><Pencil class="size-4 shrink-0" aria-hidden="true" /></template>
               </Button>
               <Button
                 text
                 size="small"
+                rounded
                 :severity="statusActionFor(client).severity"
-                :label="statusActionFor(client).verb"
                 :aria-label="`${statusActionFor(client).verb} ${client.name}`"
+                :title="`${statusActionFor(client).verb} ${client.name}`"
                 @click="askStatusChange(client)"
               >
                 <template #icon>
-                  <component :is="statusActionFor(client).icon" class="size-4" aria-hidden="true" />
+                  <component
+                    :is="statusActionFor(client).icon"
+                    class="size-4 shrink-0"
+                    aria-hidden="true"
+                  />
                 </template>
               </Button>
             </div>

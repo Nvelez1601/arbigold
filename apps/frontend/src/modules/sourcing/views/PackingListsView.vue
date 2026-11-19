@@ -7,6 +7,7 @@ import Tag from 'primevue/tag';
 import { computed } from 'vue';
 import { type LocationQueryValue, RouterLink, useRoute, useRouter } from 'vue-router';
 import EmptyState from '../../../shared/components/EmptyState.vue';
+import MetricStrip from '../../../shared/components/MetricStrip.vue';
 import PageHeader from '../../../shared/components/PageHeader.vue';
 import { useCollection } from '../../../shared/composables/useCollection.ts';
 import {
@@ -15,7 +16,8 @@ import {
   packingListsRepository,
 } from '../../../shared/data/repositories.ts';
 import { formatDate, formatGrams } from '../../../shared/utils/format.ts';
-import { STATUS_TAGS, pieceTotals } from '../composables/usePackingListEditor.ts';
+import { packingMetrics, packingTotalsOf } from '../composables/packingMetrics.ts';
+import { STATUS_TAGS } from '../composables/usePackingListEditor.ts';
 
 const clients = useCollection(QUERY_KEYS.clients, clientsRepository);
 const lists = useCollection(QUERY_KEYS.packingLists, packingListsRepository);
@@ -62,9 +64,11 @@ const rows = computed(() =>
       issuedOn: formatDate(list.issuedOn),
       client: clientNames.value.get(list.clientId) ?? 'Cliente sin registro',
       status: STATUS_TAGS[list.status],
-      ...pieceTotals(list.pieces.map((piece) => ({ ...piece, key: '', number: '' }))),
+      ...packingTotalsOf(list),
     })),
 );
+
+const metrics = computed(() => packingMetrics(lists.data.value ?? []));
 const open = (id: string) => router.push(`/packing-lists/${id}`);
 </script>
 
@@ -110,6 +114,7 @@ const open = (id: string) => router.push(`/packing-lists/${id}`);
     </RouterLink>
   </EmptyState>
   <template v-else>
+    <MetricStrip :metrics="metrics" />
     <div class="mb-4 flex flex-wrap items-end gap-3">
       <Select
         v-model="clientFilter"
@@ -133,29 +138,29 @@ const open = (id: string) => router.push(`/packing-lists/${id}`);
       />
     </div>
 
-    <div class="overflow-x-auto rounded-lg border border-border bg-surface-0">
+    <div class="overflow-x-auto rounded-2xl border border-border bg-surface-0">
       <table class="w-full min-w-[44rem] text-sm">
         <caption class="sr-only">
           Packing lists
         </caption>
-        <thead class="bg-surface-100 text-left text-muted">
+        <thead class="bg-surface-50 text-left text-[11px] tracking-[0.07em] text-muted uppercase">
           <tr>
-            <th scope="col" class="px-4 py-2.5 font-medium">Fecha</th>
-            <th scope="col" class="px-4 py-2.5 font-medium">Cliente</th>
-            <th scope="col" class="px-4 py-2.5 text-right font-medium">Piezas</th>
-            <th scope="col" class="px-4 py-2.5 text-right font-medium">Peso bruto</th>
-            <th scope="col" class="px-4 py-2.5 text-right font-medium">Peso fino</th>
-            <th scope="col" class="px-4 py-2.5 font-medium">Estado</th>
+            <th scope="col" class="px-4 py-3 font-medium">Fecha</th>
+            <th scope="col" class="px-4 py-3 font-medium">Cliente</th>
+            <th scope="col" class="px-4 py-3 text-right font-medium">Piezas</th>
+            <th scope="col" class="px-4 py-3 text-right font-medium">Peso bruto</th>
+            <th scope="col" class="px-4 py-3 text-right font-medium">Peso fino</th>
+            <th scope="col" class="px-4 py-3 font-medium">Estado</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-surface-200">
           <tr
             v-for="row in rows"
             :key="row.id"
-            class="cursor-pointer transition-colors duration-150 hover:bg-primary-50"
+            class="cursor-pointer transition-colors duration-150 hover:bg-surface-100"
             @click="open(row.id)"
           >
-            <td class="px-4 py-2.5 whitespace-nowrap">
+            <td class="px-4 py-3 whitespace-nowrap">
               <RouterLink
                 :to="`/packing-lists/${row.id}`"
                 class="font-medium text-primary-600 hover:underline"
@@ -164,17 +169,17 @@ const open = (id: string) => router.push(`/packing-lists/${id}`);
                 {{ row.issuedOn }}
               </RouterLink>
             </td>
-            <td class="max-w-64 px-4 py-2.5 wrap-anywhere text-heading">{{ row.client }}</td>
-            <td class="px-4 py-2.5 text-right tabular-nums">{{ row.count }}</td>
-            <td class="px-4 py-2.5 text-right whitespace-nowrap tabular-nums">
+            <td class="max-w-64 px-4 py-3 wrap-anywhere text-heading">{{ row.client }}</td>
+            <td class="px-4 py-3 text-right tabular-nums">{{ row.count }}</td>
+            <td class="px-4 py-3 text-right whitespace-nowrap tabular-nums">
               {{ formatGrams(row.gross) }}
             </td>
             <td
-              class="px-4 py-2.5 text-right font-semibold whitespace-nowrap text-heading tabular-nums"
+              class="px-4 py-3 text-right font-semibold whitespace-nowrap text-heading tabular-nums"
             >
               {{ formatGrams(row.fine) }}
             </td>
-            <td class="px-4 py-2.5">
+            <td class="px-4 py-3">
               <Tag :value="row.status.label" :severity="row.status.severity" />
             </td>
           </tr>
