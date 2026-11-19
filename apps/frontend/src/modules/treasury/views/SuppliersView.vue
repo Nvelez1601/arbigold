@@ -1,53 +1,36 @@
 <script setup lang="ts">
 import type { Supplier } from '@arbigold/shared-types';
-import { Search, SearchX, Users } from 'lucide-vue-next';
+import { Ban, Pencil, RotateCcw, Search, SearchX, Users } from 'lucide-vue-next';
 import Button from 'primevue/button';
 import Column from 'primevue/column';
 import DataTable from 'primevue/datatable';
 import InputText from 'primevue/inputtext';
 import Tag from 'primevue/tag';
 import { useConfirm } from 'primevue/useconfirm';
-import { useToast } from 'primevue/usetoast';
 import { computed, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import EmptyState from '../../../shared/components/EmptyState.vue';
+import MetricStrip from '../../../shared/components/MetricStrip.vue';
 import PageHeader from '../../../shared/components/PageHeader.vue';
 import {
   useCollection,
   useCollectionMutations,
 } from '../../../shared/composables/useCollection.ts';
+import { useNotify } from '../../../shared/composables/useNotify.ts';
 import { QUERY_KEYS, suppliersRepository } from '../../../shared/data/repositories.ts';
 import { formatPercent } from '../../../shared/utils/format.ts';
 import SupplierFormDialog from '../components/SupplierFormDialog.vue';
-import { SUPPLIER_KIND_INFO, type SupplierFormOutput } from '../composables/useSupplierForm.ts';
-
-const TOAST_LIFE_MS = 4000;
-
-/** Desactivar no borra: el proveedor conserva su historial y se puede reactivar. */
-const ACTIVATION_COPY = {
-  deactivate: {
-    header: 'Desactivar proveedor',
-    message: (name: string) =>
-      `${name} quedará inactivo y no se ofrecerá para operaciones nuevas. Su historial se conserva y puedes reactivarlo cuando quieras.`,
-    acceptLabel: 'Desactivar',
-    severity: 'danger',
-    done: 'Proveedor desactivado',
-    failed: 'No se pudo desactivar el proveedor',
-  },
-  reactivate: {
-    header: 'Reactivar proveedor',
-    message: (name: string) => `${name} vuelve a estar disponible para operaciones nuevas.`,
-    acceptLabel: 'Reactivar',
-    severity: undefined,
-    done: 'Proveedor reactivado',
-    failed: 'No se pudo reactivar el proveedor',
-  },
-} as const;
-type ActivationAction = keyof typeof ACTIVATION_COPY;
+import { supplierMetrics } from '../composables/supplierMetrics.ts';
+import {
+  SUPPLIER_ACTIVATION_COPY,
+  SUPPLIER_KIND_INFO,
+  type SupplierActivationAction,
+  type SupplierFormOutput,
+} from '../composables/useSupplierForm.ts';
 
 const route = useRoute();
 const router = useRouter();
-const toast = useToast();
+const notify = useNotify();
 const confirm = useConfirm();
 
 const suppliers = useCollection(QUERY_KEYS.suppliers, suppliersRepository);
@@ -72,6 +55,8 @@ const visibleSuppliers = computed(() =>
   ),
 );
 
+const metrics = computed(() => supplierMetrics(allSuppliers.value));
+
 const isDialogVisible = ref(false);
 const editing = ref<Supplier | null>(null);
 const isSaving = computed(() => create.isPending.value || update.isPending.value);
@@ -80,15 +65,6 @@ const openForm = (supplier: Supplier | null) => {
   editing.value = supplier;
   isDialogVisible.value = true;
 };
-
-/** Los errores se quedan en pantalla hasta que se cierran: piden una acción. */
-const notify = (severity: 'success' | 'error', summary: string, detail: string) =>
-  toast.add({
-    severity,
-    summary,
-    detail,
-    life: severity === 'success' ? TOAST_LIFE_MS : undefined,
-  });
 
 const persist = (input: SupplierFormOutput) =>
   editing.value
@@ -109,7 +85,10 @@ const saveSupplier = async (input: SupplierFormOutput) => {
   }
 };
 
-const setActive = async (supplier: Supplier, copy: (typeof ACTIVATION_COPY)[ActivationAction]) => {
+const setActive = async (
+  supplier: Supplier,
+  copy: (typeof SUPPLIER_ACTIVATION_COPY)[SupplierActivationAction],
+) => {
   try {
     await update.mutateAsync({ id: supplier.id, patch: { active: !supplier.active } });
     notify('success', copy.done, supplier.name);
@@ -119,7 +98,7 @@ const setActive = async (supplier: Supplier, copy: (typeof ACTIVATION_COPY)[Acti
 };
 
 const confirmToggleActive = (supplier: Supplier) => {
-  const copy = ACTIVATION_COPY[supplier.active ? 'deactivate' : 'reactivate'];
+  const copy = SUPPLIER_ACTIVATION_COPY[supplier.active ? 'deactivate' : 'reactivate'];
   confirm.require({
     header: copy.header,
     message: copy.message(supplier.name),
@@ -133,6 +112,17 @@ const UNSET = 'Sin definir';
 const percentOf = (supplier: Supplier) =>
   supplier.defaultPercentage ? formatPercent(supplier.defaultPercentage) : UNSET;
 const kindOf = (supplier: Supplier) => SUPPLIER_KIND_INFO[supplier.kind];
+/** Acciones de cada fila: editar y activar/desactivar, como lista (sin botones repetidos). */
+const rowActions = (supplier: Supplier) => [
+  { label: 'Editar', icon: Pencil, severity: undefined, run: () => openForm(supplier) },
+  {
+    label: supplier.active ? 'Desactivar' : 'Reactivar',
+    icon: supplier.active ? Ban : RotateCcw,
+    severity: supplier.active ? 'danger' : 'secondary',
+    run: () => confirmToggleActive(supplier),
+  },
+];
+
 /** Inactivo se distingue por fondo, nombre atenuado y su Tag: sin opacidad, el contraste no baja de AA. */
 const rowClass = (supplier: Supplier) => (supplier.active ? undefined : 'bg-surface-50!');
 </script>
@@ -170,22 +160,28 @@ const rowClass = (supplier: Supplier) => (supplier.active ? undefined : 'bg-surf
 
   <section v-else aria-labelledby="suppliers-list-title" class="flex flex-col gap-4">
     <h2 id="suppliers-list-title" class="sr-only">Lista de proveedores</h2>
-    <div class="relative max-w-sm">
-      <label for="suppliers-search" class="sr-only">Buscar proveedor por nombre</label>
-      <Search
-        class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted"
-        aria-hidden="true"
-      />
-      <InputText
-        id="suppliers-search"
-        v-model="search"
-        type="search"
-        name="q"
-        autocomplete="off"
-        spellcheck="false"
-        placeholder="Buscar por nombre…"
-        class="w-full pl-9"
-      />
+    <MetricStrip :metrics="metrics" />
+    <div class="flex flex-wrap items-end justify-between gap-3">
+      <div class="relative w-full max-w-sm">
+        <label for="suppliers-search" class="sr-only">Buscar proveedor por nombre</label>
+        <Search
+          class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted"
+          aria-hidden="true"
+        />
+        <InputText
+          id="suppliers-search"
+          v-model="search"
+          type="search"
+          name="q"
+          autocomplete="off"
+          spellcheck="false"
+          placeholder="Buscar por nombre…"
+          class="w-full pl-10!"
+        />
+      </div>
+      <p class="text-sm text-muted tabular-nums" aria-live="polite">
+        {{ visibleSuppliers.length }} de {{ allSuppliers.length }} proveedores
+      </p>
     </div>
 
     <EmptyState
@@ -248,20 +244,20 @@ const rowClass = (supplier: Supplier) => (supplier.active ? undefined : 'bg-surf
         <template #body="{ data }">
           <div class="flex justify-end gap-1">
             <Button
-              label="Editar"
+              v-for="action in rowActions(data)"
+              :key="action.label"
               size="small"
               text
-              :aria-label="`Editar ${data.name}`"
-              @click="openForm(data)"
-            />
-            <Button
-              :label="data.active ? 'Desactivar' : 'Reactivar'"
-              size="small"
-              text
-              severity="secondary"
-              :aria-label="`${data.active ? 'Desactivar' : 'Reactivar'} ${data.name}`"
-              @click="confirmToggleActive(data)"
-            />
+              rounded
+              :severity="action.severity"
+              :aria-label="`${action.label} ${data.name}`"
+              :title="`${action.label} ${data.name}`"
+              @click="action.run()"
+            >
+              <template #icon
+                ><component :is="action.icon" class="size-4 shrink-0" aria-hidden="true"
+              /></template>
+            </Button>
           </div>
         </template>
       </Column>

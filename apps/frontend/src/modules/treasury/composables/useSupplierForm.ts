@@ -127,3 +127,26 @@ export const useSupplierForm = () => {
 
   return { values, errors, isDirty, reset, validate };
 };
+
+/** Desactivar no borra: el proveedor conserva su historial y se puede reactivar. */
+export const SUPPLIER_ACTIVATION_COPY = {
+  deactivate: {
+    header: 'Desactivar proveedor',
+    message: (name: string) =>
+      `${name} quedará inactivo y no se ofrecerá para operaciones nuevas. Su historial se conserva y puedes reactivarlo cuando quieras.`,
+    acceptLabel: 'Desactivar',
+    severity: 'danger',
+    done: 'Proveedor desactivado',
+    failed: 'No se pudo desactivar el proveedor',
+  },
+  reactivate: {
+    header: 'Reactivar proveedor',
+    message: (name: string) => `${name} vuelve a estar disponible para operaciones nuevas.`,
+    acceptLabel: 'Reactivar',
+    severity: undefined,
+    done: 'Proveedor reactivado',
+    failed: 'No se pudo reactivar el proveedor',
+  },
+} as const;
+
+export type SupplierActivationAction = keyof typeof SUPPLIER_ACTIVATION_COPY;
