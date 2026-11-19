@@ -10,6 +10,8 @@ export default mergeConfig(
       environment: 'jsdom',
       include: ['src/**/*.spec.ts'],
       passWithNoTests: true,
+      // matchMedia y ResizeObserver para PrimeVue (jsdom no los trae): test/support/setup.ts
+      setupFiles: ['./test/support/setup.ts'],
       // Bajo carga, montar PrimeVue puede superar los 5 s por test: 15 s evitan flakes sin
       // ocultar colgados reales (los asserts usan waitFor con timeout propio).
       testTimeout: 15_000,
