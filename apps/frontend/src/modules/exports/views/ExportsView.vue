@@ -3,13 +3,13 @@ import type { ExportInput } from '@arbigold/shared-types';
 import { useQueryClient } from '@tanstack/vue-query';
 import { Plus, Users } from 'lucide-vue-next';
 import Button from 'primevue/button';
-import Select from 'primevue/select';
 import Tag from 'primevue/tag';
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
 import { computed, defineAsyncComponent, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import EmptyState from '../../../shared/components/EmptyState.vue';
+import MetricStrip from '../../../shared/components/MetricStrip.vue';
 import PageHeader from '../../../shared/components/PageHeader.vue';
 import { useCollection } from '../../../shared/composables/useCollection.ts';
 import {
@@ -20,8 +20,9 @@ import {
   suppliersRepository,
 } from '../../../shared/data/repositories.ts';
 import { formatDate, formatGrams } from '../../../shared/utils/format.ts';
+import ExportStatusFilter from '../components/ExportStatusFilter.vue';
+import { exportMetrics } from '../composables/exportMetrics.ts';
 import {
-  EXPORT_STATUS_FILTER_OPTIONS,
   EXPORT_STATUS_LABELS,
   EXPORT_STATUS_SEVERITY,
   type ExportRow,
@@ -74,13 +75,18 @@ const statusFilter = computed(() => validExportStatusFilter(route.query['estado'
 const setStatusFilter = (value: string | null) =>
   router.replace({ query: value?.trim() ? { estado: value.trim() } : {} });
 
-const rows = computed(() =>
+const allRows = computed(() =>
   toExportRows(allExports.value, {
     suppliers: suppliers.value,
     packingLists: packingLists.value,
-    status: statusFilter.value,
+    status: '',
   }),
 );
+const rows = computed(() =>
+  allRows.value.filter((row) => !statusFilter.value || row.record.status === statusFilter.value),
+);
+
+const metrics = computed(() => exportMetrics(allRows.value));
 
 const isDialogOpen = ref(false);
 const dialogKey = ref(0);
@@ -127,19 +133,19 @@ const confirmAdvance = (row: ExportRow) => {
   });
 };
 
-const thClass = 'px-3 py-2 font-medium';
-const NUMERIC_COLUMNS = ['Packing lists', 'Piezas', 'Peso fino total', 'Utilidad neta estimada'];
+const thClass = 'px-3 py-3 font-medium whitespace-nowrap';
+const NUMERIC_COLUMNS = ['Packing lists', 'Piezas', 'Fino total', 'Utilidad neta'];
 const COLUMNS = ['Fecha', 'Proveedor', 'Destino', ...NUMERIC_COLUMNS, 'Estado'];
 const columnClass = (column: string) => [thClass, NUMERIC_COLUMNS.includes(column) && 'text-right'];
-const tdClass = 'px-3 py-2';
-const numClass = 'px-3 py-2 text-right tabular-nums';
+const tdClass = 'px-3 py-3 whitespace-nowrap';
+const numClass = 'px-3 py-3 text-right tabular-nums';
 </script>
 
 <template>
   <PageHeader title="Exportaciones" description="Envíos al proveedor y resultados">
     <template #actions>
       <Button label="Nueva exportación" @click="openDialog">
-        <template #icon><Plus class="size-4" aria-hidden="true" /></template>
+        <template #icon><Plus class="size-4 shrink-0" aria-hidden="true" /></template>
       </Button>
     </template>
   </PageHeader>
@@ -170,30 +176,15 @@ const numClass = 'px-3 py-2 text-right tabular-nums';
   </EmptyState>
 
   <section v-else class="flex flex-col gap-3">
-    <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-      <label id="export-status-filter-label" for="export-status-filter" class="text-sm text-muted">
-        Estado
-      </label>
-      <Select
-        input-id="export-status-filter"
-        aria-labelledby="export-status-filter-label"
-        :model-value="statusFilter"
-        :options="EXPORT_STATUS_FILTER_OPTIONS"
-        option-label="label"
-        option-value="value"
-        class="w-48"
-        @update:model-value="setStatusFilter"
-      />
-      <p v-if="!packingListOptions.length" class="text-sm text-muted" data-test="no-available">
-        No quedan packing lists recibidos sin exportar.
-        <RouterLink to="/packing-lists" class="text-primary-600 underline">
-          Marca más como recibidos
-        </RouterLink>
-      </p>
-    </div>
-    <div class="overflow-x-auto rounded-lg border border-border bg-surface-0">
+    <MetricStrip :metrics="metrics" />
+    <ExportStatusFilter
+      :status="statusFilter"
+      :available="packingListOptions.length > 0"
+      @update:status="setStatusFilter"
+    />
+    <div class="overflow-x-auto rounded-2xl border border-border bg-surface-0">
       <table class="w-full text-sm">
-        <thead class="bg-surface-100 text-left text-heading">
+        <thead class="bg-surface-50 text-left text-[11px] tracking-[0.07em] text-muted uppercase">
           <tr>
             <th v-for="column in COLUMNS" :key="column" scope="col" :class="columnClass(column)">
               {{ column }}
