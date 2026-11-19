@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  MIN_NEW_STATEMENTS_PCT,
   evaluateDiffCoverage,
   parseAddedLines,
   relativizeReport,
@@ -106,6 +107,21 @@ describe('evaluateDiffCoverage', () => {
     const result = evaluateDiffCoverage(added, [unit], rules);
     expect(result.ok).toBe(false);
     expect(result.violations[0]?.file).toBe('src/a.ts');
+  });
+
+  it('una rama o función sin ejecutar ya no bloquea si las sentencias nuevas se ejecutaron', () => {
+    const report = { 'src/a.ts': coverage({ b: { 0: [1, 0] } }) };
+    const branchOnly = new Map([['src/a.ts', new Set([12])]]);
+    expect(evaluateDiffCoverage(branchOnly, [report], rules).ok).toBe(true);
+  });
+
+  it(`exige al menos ${MIN_NEW_STATEMENTS_PCT} % de las sentencias nuevas por archivo`, () => {
+    const half = { 'src/a.ts': coverage({ s: { 1: 0 } }) };
+    const both = new Map([['src/a.ts', new Set([3, 4])]]);
+    const result = evaluateDiffCoverage(both, [half], rules);
+    expect(result.ok).toBe(false);
+    expect(result.violations[0]).toMatchObject({ pct: 50, total: 2 });
+    expect(evaluateDiffCoverage(both, [half], { ...rules, minPct: 50 }).ok).toBe(true);
   });
 
   it('rechaza un archivo sujeto al gate que ningún reporte midió', () => {

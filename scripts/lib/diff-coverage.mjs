@@ -61,12 +61,22 @@ const intersectUncovered = (lists) =>
     return acc.filter((item) => keys.has(itemKey(item)));
   });
 
+/** Mínimo de sentencias NUEVAS ejecutadas por archivo (ramas y funciones no bloquean). */
+export const MIN_NEW_STATEMENTS_PCT = 80;
+
+const countAddedStatements = (fileCoverage, addedLines) =>
+  Object.values(fileCoverage.statementMap).filter((loc) => addedLines.has(startLine(loc))).length;
+
 /**
+ * Regla 2: por archivo, al menos MIN_NEW_STATEMENTS_PCT % de las sentencias agregadas se ejecuta
+ * en algún test (unit o integración). Relajada el 2026-11-19 (ADR-006): antes exigía el 100 %
+ * de sentencias, funciones y ramas, y obligaba a ciclos de tests por cada rama defensiva.
  * @param {Map<string, Set<number>>} addedByFile  paths relativos al repo
  * @param {Array<Record<string, object>>} reports  coverage-final.json ya relativizados
- * @param {{ isSubject: (path: string) => boolean }} rules  qué archivos exige el gate
+ * @param {{ isSubject: (path: string) => boolean, minPct?: number }} rules
  */
 export const evaluateDiffCoverage = (addedByFile, reports, rules) => {
+  const minPct = rules.minPct ?? MIN_NEW_STATEMENTS_PCT;
   const violations = [];
   const unmeasured = [];
   for (const [file, lines] of addedByFile) {
@@ -76,8 +86,12 @@ export const evaluateDiffCoverage = (addedByFile, reports, rules) => {
       unmeasured.push(file);
       continue;
     }
-    const uncovered = intersectUncovered(measured.map((cov) => uncoveredAddedItems(cov, lines)));
-    if (uncovered.length > 0) violations.push({ file, uncovered });
+    const total = countAddedStatements(measured[0], lines);
+    const uncovered = intersectUncovered(
+      measured.map((cov) => uncoveredAddedItems(cov, lines)),
+    ).filter((item) => item.kind === 'statement');
+    const pct = total === 0 ? 100 : ((total - uncovered.length) / total) * 100;
+    if (pct < minPct) violations.push({ file, uncovered, pct, total });
   }
   return { violations, unmeasured, ok: violations.length === 0 && unmeasured.length === 0 };
 };

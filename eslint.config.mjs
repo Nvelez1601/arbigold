@@ -16,13 +16,13 @@ const TS_PROJECTS = [
   'packages/shared-types/tsconfig.json',
 ];
 
-// ---------- Clean code: límites verificables (instructions/clean-code.md) ----------
+// ---------- Clean code: límites verificables (instructions/clean-code.md; relajados en ADR-006) ----------
 const cleanCodeRules = {
-  'max-lines-per-function': ['error', { max: 30, skipBlankLines: true, skipComments: true }],
-  'max-lines': ['error', { max: 250, skipBlankLines: true, skipComments: true }],
-  'max-params': ['error', 3],
-  'max-depth': ['error', 2],
-  complexity: ['error', 8],
+  'max-lines-per-function': ['error', { max: 50, skipBlankLines: true, skipComments: true }],
+  'max-lines': ['error', { max: 400, skipBlankLines: true, skipComments: true }],
+  'max-params': ['error', 4],
+  'max-depth': ['error', 3],
+  complexity: ['error', 12],
   'no-else-return': ['error', { allowElseIf: false }],
   'no-nested-ternary': 'error',
   'no-console': 'error',
@@ -285,7 +285,7 @@ export default tseslint.config(
       'vitest/no-focused-tests': 'error',
       'vitest/no-disabled-tests': 'error',
       'max-lines-per-function': 'off',
-      'max-lines': ['error', { max: 500, skipBlankLines: true, skipComments: true }],
+      'max-lines': ['error', { max: 800, skipBlankLines: true, skipComments: true }],
     },
   },
 

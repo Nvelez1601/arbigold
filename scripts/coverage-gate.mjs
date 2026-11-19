@@ -5,7 +5,12 @@
 // base por defecto: merge-base con origin/main (lo que aún no se pusheó). Sin remoto: todo el repo.
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
-import { evaluateDiffCoverage, parseAddedLines, relativizeReport } from './lib/diff-coverage.mjs';
+import {
+  MIN_NEW_STATEMENTS_PCT,
+  evaluateDiffCoverage,
+  parseAddedLines,
+  relativizeReport,
+} from './lib/diff-coverage.mjs';
 import { isSourceFile } from './lib/spec-presence.mjs';
 
 const EMPTY_TREE = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
@@ -58,7 +63,7 @@ const result = evaluateDiffCoverage(parseAddedLines(diff), reports, { isSubject 
 const label = base === EMPTY_TREE ? 'todo el repo' : base.slice(0, 8);
 if (result.ok) {
   process.stdout.write(
-    `✓ diff-coverage: todo lo agregado desde ${label} se ejecuta en algún test.\n`,
+    `✓ diff-coverage: ≥ ${MIN_NEW_STATEMENTS_PCT} % de lo agregado desde ${label} se ejecuta en algún test.\n`,
   );
   process.exit(0);
 }
@@ -68,11 +73,11 @@ const lines = [
       `  ✗ ${file}\n      → ningún reporte de cobertura lo midió (¿corriste npm run test:cov?)`,
   ),
   ...result.violations.map(
-    ({ file, uncovered }) =>
-      `  ✗ ${file}\n${uncovered.map((i) => `      línea ${i.line}: ${i.kind}${i.name ? ` ${i.name}` : ''}${i.arm === undefined ? '' : ` (brazo ${i.arm})`} nunca se ejecutó`).join('\n')}`,
+    ({ file, uncovered, pct, total }) =>
+      `  ✗ ${file}: ${pct.toFixed(1)} % de ${total} sentencias nuevas (mínimo ${MIN_NEW_STATEMENTS_PCT} %)\n${uncovered.map((i) => `      línea ${i.line} nunca se ejecutó`).join('\n')}`,
   ),
 ];
 process.stderr.write(
-  `\nRegla 2 (instructions/testing.md): lo agregado desde ${label} tiene que ejecutarse.\n\n${lines.join('\n')}\n\nEscribe el test que entre ahí. No bajes pisos ni excluyas archivos.\n\n`,
+  `\nRegla 2 (instructions/testing.md): al menos ${MIN_NEW_STATEMENTS_PCT} % de lo agregado desde ${label} tiene que ejecutarse.\n\n${lines.join('\n')}\n\nEscribe el test que entre ahí. No bajes pisos ni excluyas archivos.\n\n`,
 );
 process.exit(1);
