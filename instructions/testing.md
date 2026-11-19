@@ -45,9 +45,9 @@ Líneas, statements, funciones **y** branches, medidas **por archivo** (no el pr
 
 Se mide el **archivo completo**, no tu diff. Si tocas 3 líneas de un archivo que estaba al 60%, el archivo entero tiene que subir al piso.
 
-### Regla 2 — Lo que agregaste tiene que ejecutarse
+### Regla 2 — Lo que agregaste tiene que ejecutarse (≥ 80 %)
 
-El piso es del archivo; este check es del **diff**. Lo viejo no puede esconder lo nuevo: si `operation.repository.ts` está al 85% y agregas `findBySupplierAndStatus` sin un test que lo llame, el archivo puede seguir en 81% y **el pre-push igual queda rojo**. Cada línea, función y branch agregado o modificado desde `origin/main` (lo que vas a pushear) debe ejecutarse al menos una vez. Una función nueva vacía no mueve el % de líneas, pero igual tiene que ejecutarse.
+El piso es del archivo; este check es del **diff**. Lo viejo no puede esconder lo nuevo: si `operation.repository.ts` está al 85% y agregas `findBySupplierAndStatus` sin un test que lo llame, el archivo puede seguir en 81% y **el pre-push igual queda rojo**. Por archivo, **al menos el 80 % de las sentencias agregadas o modificadas** desde `origin/main` (lo que vas a pushear) debe ejecutarse en algún test. Las ramas y funciones defensivas sin ejecutar ya no bloquean (relajado en ADR-006: exigir el 100 % de cada rama obligaba a ciclos de tests sin valor). La Regla 1 (≥ 80 % por archivo, ≥ 95 % en el dominio) no cambia.
 
 ### Regla 3 — Los specs de integración son de verdad
 

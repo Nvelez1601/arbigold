@@ -48,6 +48,12 @@ Un solo desarrollador: se commitea directo en `main` (ver `memory/decision_logs/
 - Commits atómicos de ≤ 10 archivos: `tipo(scope): desc [| ARB-123]`, con los scopes de `commitlint.config.mjs`.
 - Antes de pushear cambios en áreas críticas (dinero, KYC, auth, auditoría, RLS): corre la skill `arbigold-orquestador-reviews`.
 
+## Cómo se trabaja con agentes (obligatorio)
+
+- **Por defecto, el agente de la sesión hace el trabajo directamente.** Las skills de orquestación (`arbigold-orquestador-minion`, `arbigold-orquestador-reviews`), los minions, los subagentes y los **peer reviews** solo se usan si el usuario los pide **o después de preguntarle y que acepte**, con una estimación de costo ("son ~5 agentes en paralelo, consume bastante").
+- Antes de proponerlos, considera si el cambio lo amerita: ajustes de UI, copy o refactors chicos no lo ameritan.
+- Si un gate o una regla obliga a dar vueltas sin mejorar el resultado (p. ej. recortar líneas), detente y propónle al usuario ajustar la regla en vez de seguir iterando.
+
 ## Skills y agentes
 
 | Skill                                           | Úsala cuando…                                                                                                                                                                                 |

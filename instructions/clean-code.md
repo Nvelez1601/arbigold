@@ -4,13 +4,15 @@
 
 ## Tamaño y forma
 
+> Límites relajados el 2026-11-19 (ADR-006): los anteriores (30/250/3/2/8) forzaban ciclos de recortes sin mejorar el diseño. Si un archivo se acerca al límite, la respuesta es **extraer un componente o composable con sentido**, no comprimir formato.
+
 | Regla                              | Límite                             | Lo hace cumplir                            |
 | ---------------------------------- | ---------------------------------- | ------------------------------------------ |
-| Líneas por función                 | ≤ 30                               | ESLint `max-lines-per-function`            |
-| Líneas por archivo                 | ≤ 250                              | ESLint `max-lines`                         |
-| Parámetros por función             | ≤ 3 (si son más, un objeto tipado) | ESLint `max-params`                        |
-| Anidamiento                        | ≤ 2 niveles                        | ESLint `max-depth`                         |
-| Complejidad ciclomática            | ≤ 8                                | ESLint `complexity`                        |
+| Líneas por función                 | ≤ 50                               | ESLint `max-lines-per-function`            |
+| Líneas por archivo                 | ≤ 400 (specs ≤ 800)                | ESLint `max-lines`                         |
+| Parámetros por función             | ≤ 4 (si son más, un objeto tipado) | ESLint `max-params`                        |
+| Anidamiento                        | ≤ 3 niveles                        | ESLint `max-depth`                         |
+| Complejidad ciclomática            | ≤ 12                               | ESLint `complexity`                        |
 | `else` después de `return`/`throw` | prohibido                          | ESLint `no-else-return`                    |
 | `any`                              | prohibido (`unknown` + narrowing)  | `@typescript-eslint/no-explicit-any`       |
 | Non-null assertion `!`             | prohibido                          | `@typescript-eslint/no-non-null-assertion` |

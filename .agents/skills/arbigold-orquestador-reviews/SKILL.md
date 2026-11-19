@@ -22,6 +22,8 @@ metadata:
 
 # Orquestador de reviews — ArbiGold
 
+> **Nunca se activa sola.** Esta skill despacha varios agentes y consume mucho. Úsala solo si el usuario la pide explícitamente o **después de preguntarle** (con una estimación de cuántos agentes y del costo) y que acepte. Para trabajo chico, hazlo directo en la sesión (ver `AGENTS.md` → "Cómo se trabaja con agentes").
+
 La sesión actúa de **orquestador**: descubre, despacha, verifica y consolida. Cada área
 del cambio la analiza un **agente de solo lectura** (`arbigold-reviewer`) con contexto
 limpio. La orquestación es de **un solo nivel** (un agente de análisis nunca despacha

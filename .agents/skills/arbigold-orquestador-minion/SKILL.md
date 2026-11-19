@@ -22,6 +22,8 @@ metadata:
 
 # Orquestador minion — ArbiGold
 
+> **Nunca se activa sola.** Esta skill despacha varios agentes y consume mucho. Úsala solo si el usuario la pide explícitamente o **después de preguntarle** (con una estimación de cuántos agentes y del costo) y que acepte. Para trabajo chico, hazlo directo en la sesión (ver `AGENTS.md` → "Cómo se trabaja con agentes").
+
 Convierte un plan en una ejecución supervisada: el agente de la sesión actúa de
 **orquestador** (no escribe el código de las tareas), delega cada tarea en un **minion**
 (`arbigold-worker`) y controla la calidad de lo que vuelve. El humano decide qué LLM

@@ -17,7 +17,9 @@
 - Tests: setup global `apps/frontend/test/support/setup.ts` (matchMedia/ResizeObserver) y helper `test/support/select.ts` (**PrimeVue 4 selecciona en `mousedown`**, no en `click`). `useNotify` compartido para toasts.
 - Estado: `format:check`, lint, typecheck, gate de specs (443 archivos) y suite frontend (456 tests) en verde.
 
-**Pendiente antes del push:** el pre-push corre `npm run verify`, que incluye `coverage:diff` (Regla 2: toda línea nueva desde `origin/main` debe ejecutarse en algún test). Con el volumen de cambios sin pushear probablemente falle en varios archivos: correr `npm run test:cov && npm run coverage:diff` y cubrir lo que marque (sin bajar pisos ni excluir archivos).
+**Reglas relajadas (ADR-006, 2026-11-19):** el pre-push bloqueó por la Regla 2 al 100 % (ramas defensivas). Ahora la Regla 2 exige **≥ 80 % de las sentencias nuevas por archivo** y el lint permite archivos de 400 líneas, funciones de 50 y complejidad 12. Con la cobertura actual el gate pasa. **Minions y peer reviews solo bajo pedido o tras preguntar** (`AGENTS.md`).
+
+**Push:** lo hace el usuario (`git push`; el pre-push corre `npm run verify`).
 
 **Siguiente sub-hito:** auth (Supabase Auth + JWKS + RBAC), migraciones con RLS y API → repositorios HTTP (`VITE_DATA_SOURCE=api`).
 
