@@ -4,8 +4,8 @@ import { PRIMARY_SCALE, SURFACE_SCALE } from './palette.ts';
 
 /**
  * Preset de PrimeVue con la paleta de ArbiGold sobre Aura.
- * Botón primario en primary.600 (baltic-blue, 7.5:1 con blanco); bordes de campos en
- * surface.400 (3.3:1, visibles según WCAG 1.4.11); texto en surface.700 (charcoal-blue).
+ * Botón primario en primary.600 (violeta, 6.4:1 con blanco); bordes de campos en
+ * surface.400 (3.4:1, visibles según WCAG 1.4.11); texto en surface.700.
  */
 export const ArbiGoldPreset = definePreset(Aura, {
   semantic: {
@@ -28,5 +28,16 @@ export const ArbiGoldPreset = definePreset(Aura, {
       hoverBorderColor: 'light-dark({primary.500}, {surface.500})',
     },
     focusRing: { color: '{primary.500}' },
+  },
+  components: {
+    tag: {
+      colorScheme: {
+        light: {
+          // Aura usa azul cielo (info) y negro (contrast): fuera de la paleta. Se reemplazan por violetas.
+          info: { background: '{primary.100}', color: '{primary.700}' },
+          contrast: { background: '{primary.900}', color: '#ffffff' },
+        },
+      },
+    },
   },
 });

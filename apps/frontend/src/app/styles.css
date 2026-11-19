@@ -6,67 +6,93 @@
  * Guía de uso y contrastes: docs/design/paleta.md
  */
 @theme {
-  /* Tipografía: IBM Plex Sans (local, sin CDN externo), con cifras tabulares para gramos. */
-  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  /* Tipografía: Sora para titulares y DM Sans para el cuerpo (locales, sin CDN externo). */
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Sora', ui-sans-serif, system-ui, sans-serif;
 
   /* Marca */
-  --color-brand-space-indigo: #21295c;
-  --color-brand-regal-navy: #1b3b6f;
-  --color-brand-baltic-blue: #065a82;
-  --color-brand-cerulean: #1c7293;
-  --color-brand-powder-blue: #9eb3c2;
-  --color-brand-yale-blue: #173b5e;
-  --color-brand-steel-blue: #6f9db8;
-  --color-brand-alice-blue: #d7e4e8;
-  --color-brand-dusty-lavender: #806d91;
-  --color-brand-charcoal-blue: #3d414a;
+  --color-brand-royal-violet: #6d3fd1;
+  --color-brand-deep-violet: #4b2a9b;
+  --color-brand-midnight-violet: #2a1b3d;
+  --color-brand-orchid: #e8579b;
+  --color-brand-blush: #fde8f2;
+  --color-brand-lavender: #f3eefb;
+  --color-brand-lavender-line: #e8e1f4;
+  --color-brand-violet-mist: #faf8fd;
+  --color-brand-slate-violet: #766a8c;
+  --color-brand-rose-shadow: #c23f80;
+  --color-brand-iris: #6b4a9e;
 
   /* Primaria (componentes) */
-  --color-primary-50: #f0f5f8;
-  --color-primary-100: #d7e4e8;
-  --color-primary-200: #9eb3c2;
-  --color-primary-300: #6f9db8;
-  --color-primary-400: #4688a6;
-  --color-primary-500: #1c7293;
-  --color-primary-600: #065a82;
-  --color-primary-700: #1b3b6f;
-  --color-primary-800: #173b5e;
-  --color-primary-900: #21295c;
-  --color-primary-950: #151b3c;
+  --color-primary-50: #f6f1fe;
+  --color-primary-100: #ede2fd;
+  --color-primary-200: #dcc8fa;
+  --color-primary-300: #c3a4f5;
+  --color-primary-400: #a878ee;
+  --color-primary-500: #8a4bd8;
+  --color-primary-600: #6d3fd1;
+  --color-primary-700: #5a31b8;
+  --color-primary-800: #4b2a9b;
+  --color-primary-900: #3a2177;
+  --color-primary-950: #24134d;
 
   /* Superficies y texto */
   --color-surface-0: #ffffff;
-  --color-surface-50: #eff4f6;
-  --color-surface-100: #e5edf0;
-  --color-surface-200: #d7e4e8;
-  --color-surface-300: #b0bbc0;
-  --color-surface-400: #878f96;
-  --color-surface-500: #686f76;
-  --color-surface-600: #535860;
-  --color-surface-700: #3d414a;
-  --color-surface-800: #2f3553;
-  --color-surface-900: #282a30;
-  --color-surface-950: #181a1e;
+  --color-surface-50: #faf8fd;
+  --color-surface-100: #f3eefb;
+  --color-surface-200: #e8e1f4;
+  --color-surface-300: #d5cbe6;
+  --color-surface-400: #9483b2;
+  --color-surface-500: #766a8c;
+  --color-surface-600: #5f546f;
+  --color-surface-700: #4a3f58;
+  --color-surface-800: #382f45;
+  --color-surface-900: #2a1b3d;
+  --color-surface-950: #1d1229;
 
   /* Estados */
-  --color-success: #1f7a57;
-  --color-warning: #9a5b00;
-  --color-danger: #b42332;
-  --color-info: #065a82;
+  --color-success: #0f7350;
+  --color-warning: #8a5600;
+  --color-danger: #c23450;
+  --color-info: #6d3fd1;
 
   /* Roles */
-  --color-background: #eff4f6;
-  --color-heading: #21295c;
-  --color-text: #3d414a;
-  --color-muted: #686f76;
-  --color-accent: #806d91;
-  --color-border: #9eb3c2;
-  --color-border-strong: #878f96;
+  --color-background: #faf8fd;
+  --color-heading: #2a1b3d;
+  --color-text: #4a3f58;
+  --color-muted: #766a8c;
+  --color-accent: #6b4a9e;
+  --color-border: #e8e1f4;
+  --color-border-strong: #9483b2;
 }
 
-/* Detalle de marca: degradado para encabezados y elementos destacados. */
+/* Detalle de marca: degradado violeta→rosa para encabezados y elementos destacados. */
 @utility bg-brand-gradient {
-  background-image: linear-gradient(135deg, #21295c, #1b3b6f, #065a82, #1c7293);
+  background-image: linear-gradient(135deg, #5a31b8, #6d3fd1 55%, #e8579b);
+}
+
+/* Segundo acento: rosa orquídea. */
+@utility bg-pink-gradient {
+  background-image: linear-gradient(135deg, #d6418a, #e8579b);
+}
+
+/* Titulares con la tipografía display. */
+@utility font-display {
+  font-family: var(--font-display);
+}
+
+/*
+ * Encabezados de DataTable (PrimeVue) iguales a los de las tablas nativas: pequeños, en mayúsculas
+ * espaciadas y sin partirse. Va FUERA de @layer porque los estilos de PrimeVue no usan layers.
+ */
+.p-datatable .p-datatable-header-cell {
+  background-color: var(--color-surface-50);
+  color: var(--color-muted);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 @layer base {
@@ -90,6 +116,8 @@
   h1,
   h2,
   h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.015em;
     color: var(--color-heading);
     text-wrap: balance;
   }

@@ -34,6 +34,13 @@ describe('paleta de ArbiGold', () => {
       },
     );
 
+    it('los Tag info (violeta sobre lavanda) y contrast (blanco sobre violeta) cumplen 4.5:1', () => {
+      expect(contrastRatio(PRIMARY_SCALE[700], PRIMARY_SCALE[100])).toBeGreaterThanOrEqual(
+        WCAG_AA.text,
+      );
+      expect(contrastRatio('#ffffff', PRIMARY_SCALE[900])).toBeGreaterThanOrEqual(WCAG_AA.text);
+    });
+
     it('los bordes de campos y el anillo de foco se distinguen (≥ 3:1 sobre tarjetas)', () => {
       expect(contrastRatio(ROLES.borderStrong, ROLES.surface)).toBeGreaterThanOrEqual(
         WCAG_AA.uiComponent,
@@ -43,9 +50,9 @@ describe('paleta de ArbiGold', () => {
       );
     });
 
-    it('powder-blue y steel-blue no alcanzan para texto: quedan solo como detalle', () => {
-      expect(contrastRatio(BRAND.powderBlue, ROLES.surface)).toBeLessThan(WCAG_AA.text);
-      expect(contrastRatio(BRAND.steelBlue, ROLES.surface)).toBeLessThan(WCAG_AA.text);
+    it('el blush y la línea lavanda no alcanzan para texto: quedan solo como detalle', () => {
+      expect(contrastRatio(BRAND.blush, ROLES.surface)).toBeLessThan(WCAG_AA.text);
+      expect(contrastRatio(BRAND.lavenderLine, ROLES.surface)).toBeLessThan(WCAG_AA.text);
     });
   });
 
@@ -63,7 +70,7 @@ describe('paleta de ArbiGold', () => {
     });
 
     it.each(Object.entries(STATUS))('estado %s', (name, hex) => {
-      expect(cssToken(name === 'warning' ? 'warning' : name)).toBe(hex);
+      expect(cssToken(name)).toBe(hex);
     });
 
     it.each([
